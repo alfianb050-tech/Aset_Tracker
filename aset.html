@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Aset | Asset Tracker Pro</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="apple-touch-icon" href="gambar1.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+    <style>
+        /* BACKGROUND DISATUKAN DENGAN WARNA SIDEBAR (#0d1117) */
+        html, body { background-color: #0d1117 !important; margin: 0; padding: 0; }
+        
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+    </style>
+</head>
+
+<body class="bg-[#0d1117] text-slate-100 font-sans flex flex-col lg:flex-row h-screen overflow-hidden">
+
+    <aside class="w-full lg:w-64 bg-[#0d1117] border-t lg:border-t-0 lg:border-r border-slate-800 flex lg:flex-col order-last lg:order-first z-50">
+        <div class="p-6 hidden lg:flex flex-col items-center gap-3 border-b border-slate-800">
+            <img src="gambar1.png" alt="" class="w-16 h-16 rounded-2xl border border-slate-700 mb-2 shadow-lg">
+            <span class="text-[10px] font-black tracking-[0.3em] text-blue-500 uppercase italic">Asset Tracker</span>
+        </div>
+
+        <nav class="flex-1 flex lg:flex-col justify-around lg:justify-start lg:mt-6 overflow-y-auto">
+            <div>
+                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase hidden lg:block">Main</p>
+                <ul class="space-y-1 lg:px-3">
+                    <li>
+                        <a href="index.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">📊</span> <span class="ml-0 lg:ml-2">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="transaksi.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">💸</span> <span class="ml-0 lg:ml-2">Transactions</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="aset.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 bg-slate-800/50 border-t-2 lg:border-t-0 lg:border-r-2 border-blue-500 text-blue-400 font-bold text-[10px] lg:text-xs uppercase tracking-widest rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">💎</span> <span class="ml-0 lg:ml-2">Assets</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="mt-0 lg:mt-6">
+                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase hidden lg:block">Reports</p>
+                <ul class="space-y-1 lg:px-3">
+                    <li>
+                        <a href="history.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">📜</span> <span class="ml-0 lg:ml-2">History</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="bulanan.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">📅</span> <span class="ml-0 lg:ml-2">Monthly</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="tahunan.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">📈</span> <span class="ml-0 lg:ml-2">Yearly</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="p-6 hidden lg:block border-t border-slate-800">
+            <button onclick="handleLogout()" class="w-full py-3 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">
+                Exit System
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto p-6 lg:p-10 bg-[#0d1117]">
+        <header class="mb-10 flex justify-between items-start gap-4">
+            <div>
+                <h1 class="text-2xl lg:text-4xl font-black italic uppercase tracking-tight text-white leading-none">Brankas Aset</h1>
+                <p class="text-[9px] md:text-[10px] text-blue-500 font-bold uppercase tracking-[0.3em] mt-2 italic">Encrypted Portfolio</p>
+                <p id="current-date-display" class="text-[9px] md:text-[10px] text-blue-400 font-bold uppercase tracking-[0.4em] mt-2 italic">Syncing Time...</p>
+            </div>
+            <button onclick="handleLogout()" class="lg:hidden p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl hover:bg-red-500 transition-all active:scale-90">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            </button>
+        </header>
+
+        <div class="mb-8 p-6 md:p-8 bg-gradient-to-br from-blue-600 to-blue-900 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+            <div class="relative z-10">
+                <p class="text-[9px] font-black text-blue-100 uppercase tracking-widest mb-1 italic">Total Kekayaan Terakumulasi</p>
+                <h2 id="total-wealth" class="text-3xl md:text-4xl font-black italic text-white">Rp 0</h2>
+                <div id="wealth-summary" class="mt-4 text-[9px] text-blue-200 font-black uppercase tracking-widest italic">
+                    Initializing Encrypted Data Link...
+                </div>
+            </div>
+            <div class="absolute -right-6 -bottom-6 text-7xl md:text-9xl opacity-10 italic font-black text-white uppercase select-none">Asset</div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 pb-10">
+            <div class="bg-slate-800/40 p-6 md:p-8 rounded-[2.5rem] border border-slate-800 shadow-xl">
+                <div class="flex justify-between items-start mb-6 md:mb-8">
+                    <div>
+                        <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400 italic">🛡️ Reserved Fund</h3>
+                        <p class="text-[8px] text-slate-500 font-bold uppercase tracking-tighter">Safe Haven Reserve</p>
+                    </div>
+                    <span id="emergency-porsi-tag" class="text-[9px] font-mono font-bold text-blue-400 bg-blue-400/10 px-3 py-1 rounded-full italic">0% Portofolio</span>
+                </div>
+                
+                <div class="mb-2">
+    <p id="emergency-amount" class="text-2xl md:text-3xl font-black mb-4 text-white italic">Rp 0</p>
+    <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden">
+        <div id="bar-emergency" class="bg-amber-500 h-full w-[0%] shadow-[0_0_15px_rgba(245,158,11,0.5)] transition-all duration-1000"></div>
+    </div>
+    <div class="flex justify-between mt-4 text-[9px] font-black text-slate-500 uppercase tracking-widest italic">
+        <span id="emergency-progress">Progress: 0%</span>
+        <span id="emergency-target">Target: 10Jt</span>
+    </div>
+</div>
+            </div>
+
+            <div class="bg-slate-800/40 p-6 md:p-8 rounded-[2.5rem] border border-slate-800 shadow-xl flex flex-col">
+                <div class="mb-6 md:mb-8">
+                    <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400 italic">📈 Active Portfolio</h3>
+                    <p class="text-[8px] text-slate-500 font-bold uppercase tracking-tighter">Crypto, Saham, & Logam Mulia</p>
+                </div>
+                <div id="active-investments" class="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scroll">
+                    </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function startClock() {
+            const display = document.getElementById('current-date-display');
+            setInterval(() => {
+                const now = new Date();
+                const options = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
+                const dateStr = now.toLocaleDateString('id-ID', options).toUpperCase();
+                const timeStr = now.toLocaleTimeString('en-GB', { hour12: false });
+                display.innerText = `${dateStr} // ${timeStr}`;
+            }, 1000);
+        }
+
+        async function securityCheck() {
+            try {
+                const user = await window.getCurrentUser();
+                if (!user) { window.location.href = 'login.html'; return; }
+                
+                // MENGGUNAKAN LOGIC GLOBAL DARI APP.JS (Mencegah redundansi render harian)
+                const transactions = await window.getTransactions();
+                const summary = window.calculateAssetSummary(transactions);
+                
+                if (document.getElementById('total-wealth')) document.getElementById('total-wealth').innerText = window.formatIDR(summary.netWorth);
+                if (document.getElementById('emergency-amount')) document.getElementById('emergency-amount').innerText = window.formatIDR(summary.reservedFund);
+                
+                if (document.getElementById('wealth-summary')) {
+                    const cashPct = summary.netWorth > 0 ? ((summary.liquidCash / summary.netWorth) * 100).toFixed(0) : 0;
+                    const assetPct = summary.netWorth > 0 ? ((summary.assetBase / summary.netWorth) * 100).toFixed(0) : 0;
+                    const daruratPct = summary.netWorth > 0 ? ((summary.reservedFund / summary.netWorth) * 100).toFixed(0) : 0;
+                    
+                    document.getElementById('wealth-summary').innerText = `Kas Likuid: ${cashPct}% | Dana Darurat: ${daruratPct}% | Portofolio Aset: ${assetPct}%`;
+                }
+
+               if (document.getElementById('bar-emergency')) {
+                    // 1. Target Dinamis: 20% dari Net Worth
+                    const tgt = summary.netWorth * 0.20; 
+                    
+                    // 2. Hitung persentase bar (mentok di 100% biar gak jebol)
+                    let prg = 0;
+                    if (tgt > 0) {
+                        prg = Math.min((summary.reservedFund / tgt) * 100, 100);
+                    }
+                    
+                    // 3. Animasikan bar dan teks progress
+                    document.getElementById('bar-emergency').style.width = `${prg}%`;
+                    document.getElementById('emergency-progress').innerText = `Progress: ${prg.toFixed(0)}%`;
+                    
+                    // 4. Ubah angka target statis di pojok kanan bawah jadi dinamis
+                    const targetEl = document.getElementById('emergency-target');
+                    if (targetEl) {
+                        targetEl.innerText = `Target: ${window.formatIDR(tgt)}`;
+                    }
+
+                    // 5. Label porsi portofolio (kodingan asli lu, gue biarin aman)
+                    const porsiEm = summary.netWorth > 0 ? ((summary.reservedFund / summary.netWorth) * 100).toFixed(1) : 0;
+                    const porsiTag = document.getElementById('emergency-porsi-tag');
+                    if(porsiTag) {
+                        porsiTag.innerText = `${porsiEm}% Portofolio`;
+                    }
+                }
+
+                const container = document.getElementById('active-investments');
+                if (container) {
+                    container.innerHTML = '';
+                    const assets = Object.entries(summary.assetMap);
+                    if (assets.length === 0) {
+                        container.innerHTML = `<p class="text-[9px] text-slate-600 italic text-center py-10 uppercase font-black">Belum Ada Portofolio Aktif</p>`;
+                    } else {
+                        assets.sort((a,b) => b[1].modal - a[1].modal).forEach(([name, data]) => {
+                            if (data.modal <= 0) return;
+                            const porsi = summary.netWorth > 0 ? ((data.modal / summary.netWorth) * 100).toFixed(1) : 0;
+                            let color = 'text-blue-400', barColor = 'bg-blue-500';
+                            if (name.includes('BTC') || name.includes('CRYPTO')) { color='text-orange-400'; barColor='bg-orange-500'; }
+                            else if (name.includes('GOLD') || name.includes('XAU')) { color='text-yellow-500'; barColor='bg-yellow-500'; }
+
+                            container.innerHTML += `
+                                <div class="p-5 bg-slate-950/40 rounded-3xl border border-slate-700/50 mb-4">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-[10px] font-black ${color} uppercase tracking-widest italic">${name}</span>
+                                        <span class="text-[8px] font-black text-slate-500 italic">${porsi}%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-900 h-1 rounded-full mb-4 overflow-hidden"><div class="${barColor} h-full" style="width: ${porsi}%"></div></div>
+                                    <div class="flex justify-between items-end">
+                                        <div><p class="text-[7px] text-slate-600 uppercase font-black tracking-tighter mb-1">Nilai Posisi</p><p class="text-xl font-black text-white italic">${window.formatIDR(data.modal)}</p></div>
+                                        <div class="text-right"><p class="text-[10px] font-mono text-slate-400 font-bold">${data.unit} ${data.type}</p></div>
+                                    </div>
+                                </div>`;
+                        });
+                    }
+                }
+            } catch (err) { window.location.href = 'login.html'; }
+        }
+
+        async function handleLogout() {
+            if (confirm("Akhiri Sesi Sistem?")) { await window.logoutUser(); window.location.href = 'login.html'; }
+        }
+
+        window.onload = async () => {
+            startClock();
+                await securityCheck()}
+    </script>
+</body>
+</html>

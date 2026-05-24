@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Transaksi | Asset Tracker Pro</title>
+    <link class="rounded-full" rel="apple-touch-icon" href="gambar1.png">
+    
+    <style>
+        html, body { background-color: #0d1117 !important; margin: 0; padding: 0; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+
+        @keyframes slideDown {
+            from { transform: translate(-50%, -100%); opacity: 0; }
+            to { transform: translate(-50%, 20px); opacity: 1; }
+        }
+        .toast-animate { animation: slideDown 0.4s ease forwards; }
+    </style>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+</head>
+
+<body class="bg-[#0d1117] text-slate-100 font-sans flex flex-col lg:flex-row h-screen overflow-hidden">
+
+    <div id="custom-toast" class="fixed top-0 left-1/2 -translate-x-1/2 z-[10000] hidden toast-animate">
+        <div id="toast-bg" class="bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-xl border border-blue-400/50 flex items-center gap-3">
+            <span id="toast-icon">🛡️</span>
+            <span id="toast-text" class="text-[10px] font-black uppercase italic tracking-[0.2em]">Transaksi Berhasil Dicatat</span>
+        </div>
+    </div>
+
+    <aside class="w-full lg:w-64 bg-[#0d1117] border-t lg:border-t-0 lg:border-r border-slate-800 flex lg:flex-col order-last lg:order-first z-50">
+        <div class="p-6 hidden lg:flex flex-col items-center gap-3 border-b border-slate-800">
+            <img src="gambar1.png" alt="" class="w-16 h-16 rounded-2xl border border-slate-700 mb-2 shadow-lg">
+            <span class="text-[10px] font-black tracking-[0.3em] text-blue-500 uppercase italic">Asset Tracker</span>
+        </div>
+
+        <nav class="flex-1 flex lg:flex-col justify-around lg:justify-start lg:mt-6 overflow-y-auto">
+            <div>
+                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase hidden lg:block">Main</p>
+                <ul class="space-y-1 lg:px-3">
+                    <li>
+                        <a href="index.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">📊</span> <span class="ml-0 lg:ml-2">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="transaksi.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 bg-slate-800/50 border-t-2 lg:border-t-0 lg:border-r-2 border-blue-500 text-blue-400 font-bold text-[10px] lg:text-xs uppercase tracking-widest rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">💸</span> <span class="ml-0 lg:ml-2">Transactions</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="aset.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">💎</span> <span class="ml-0 lg:ml-2">Assets</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="mt-0 lg:mt-6">
+                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase hidden lg:block">Reports</p>
+                <ul class="space-y-1 lg:px-3">
+                    <li>
+                        <a href="history.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">📜</span> <span class="ml-0 lg:ml-2">History</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="bulanan.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">📅</span> <span class="ml-0 lg:ml-2">Monthly</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="tahunan.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">📈</span> <span class="ml-0 lg:ml-2">Yearly</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="p-6 hidden lg:block border-t border-slate-800">
+            <button onclick="handleLogout()" class="w-full py-3 bg-red-900/10 border border-red-500/20 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">
+                Exit System
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto p-6 lg:p-10 bg-[#0d1117]">
+        <header class="mb-10 flex justify-between items-start">
+            <div>
+                <h1 class="text-2xl lg:text-4xl font-black tracking-tight text-white italic uppercase leading-none">Entry Command</h1>
+                <p id="current-date-display" class="text-[9px] md:text-[10px] text-blue-400 font-bold uppercase tracking-[0.4em] mt-2 italic">Loading System Time...</p>
+            </div>
+            <button onclick="handleLogout()" class="lg:hidden p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl hover:bg-red-500 transition-all active:scale-90">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            </button>
+        </header>
+
+        <div class="flex flex-col items-center justify-center py-6">
+            <div class="bg-slate-800/40 border border-slate-800 w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
+                <form id="formTx" class="space-y-4 relative z-10">
+                    <div class="grid grid-cols-3 gap-2 mb-6">
+                        <button type="button" id="btnIn" onclick="setType('pemasukan')" class="py-3 rounded-2xl border-2 font-black text-[9px] uppercase transition-all italic">Pemasukan</button>
+                        <button type="button" id="btnOut" onclick="setType('pengeluaran')" class="py-3 rounded-2xl border-2 font-black text-[9px] uppercase transition-all italic">Pengeluaran</button>
+                        <button type="button" id="btnInv" onclick="setType('investasi')" class="py-3 rounded-2xl border-2 font-black text-[9px] uppercase transition-all italic">Aset</button>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-[9px] font-black text-slate-500 uppercase italic ml-1">Tanggal</label>
+                        <input type="date" id="tanggal" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4 text-sm text-white focus:border-blue-500 outline-none transition" required>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-[9px] font-black text-slate-500 uppercase italic ml-1">Kategori</label>
+                        <select id="kategori" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4 text-sm text-white outline-none cursor-pointer"></select>
+                    </div>
+
+                    <div id="unitSection" class="hidden grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="block text-[9px] font-black text-blue-400 uppercase italic ml-1">Jumlah Unit</label>
+                            <input type="number" step="any" id="unitCount" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4 text-sm text-white outline-none">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-[9px] font-black text-slate-400 uppercase italic ml-1">Satuan</label>
+                            <select id="unitType" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4 text-sm text-white outline-none">
+                                <option value="CASH">CASH</option><option value="LOT">LOT</option><option value="GRAM">GRAM</option><option value="UNIT">UNIT</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-[9px] font-black text-slate-500 uppercase italic ml-1">Nominal (IDR)</label>
+                        <input type="number" id="nominal" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4 text-sm text-white font-bold outline-none" required>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-[9px] font-black text-blue-400 uppercase italic ml-1">Keterangan / Catatan</label>
+                        <input type="text" id="keterangan" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4 text-sm text-white italic outline-none" required>
+                    </div>
+
+                    <button type="submit" id="btnSubmit" class="w-full bg-blue-600 hover:bg-blue-500 py-5 rounded-2xl text-[10px] font-black shadow-lg shadow-blue-900/30 transition active:scale-95 uppercase tracking-[0.2em] italic mt-4">Commit Transaksi</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let activeType = 'pemasukan';
+        const categoryData = {
+            pemasukan: ['Gaji', 'WD Profit Trading', 'Dana Darurat', 'Bonus', 'Lain-lain'],
+            pengeluaran: ['Makanan & Minuman', 'Modal Trading (Deposit)', 'Rokok', 'Orang Tua', 'Lifestyle', 'Dana Darurat'],
+            investasi: ['Beli Aset', 'Jual Aset']
+        };
+
+        function startClock() {
+            const display = document.getElementById('current-date-display');
+            setInterval(() => {
+                const now = new Date();
+                const options = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
+                const dateStr = now.toLocaleDateString('id-ID', options).toUpperCase();
+                const timeStr = now.toLocaleTimeString('en-GB', { hour12: false });
+                display.innerText = `${dateStr} // ${timeStr}`;
+            }, 1000);
+        }
+
+        function setTodayDate() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            document.getElementById('tanggal').value = `${yyyy}-${mm}-${dd}`;
+        }
+
+        async function securityCheck() {
+            startClock(); setTodayDate();
+            try {
+                const user = await window.getCurrentUser();
+                if (!user) window.location.href = 'login.html';
+            } catch (err) { console.error(err); }
+        }
+
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('custom-toast');
+            document.getElementById('toast-text').innerText = msg;
+            document.getElementById('toast-bg').className = isError ? "bg-red-600 text-white px-8 py-4 rounded-2xl shadow-xl border border-red-400/50 flex items-center gap-3" : "bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-xl border border-blue-400/50 flex items-center gap-3";
+            toast.classList.remove('hidden');
+            setTimeout(() => { toast.classList.add('hidden'); }, 3000);
+        }
+
+        function setType(type) {
+            activeType = type;
+            const bIn = document.getElementById('btnIn'), bOut = document.getElementById('btnOut'), bInv = document.getElementById('btnInv');
+            const unitSect = document.getElementById('unitSection'), selectKat = document.getElementById('kategori');
+
+            [bIn, bOut, bInv].forEach(btn => btn.className = "py-3 rounded-2xl border-2 border-slate-800 text-slate-600 font-black text-[9px] uppercase italic transition-all");
+
+            if (type === 'pemasukan') {
+                bIn.classList.replace('border-slate-800', 'border-blue-500'); bIn.classList.replace('text-slate-600', 'text-blue-400');
+                unitSect.classList.add('hidden');
+            } else if (type === 'pengeluaran') {
+                bOut.classList.replace('border-slate-800', 'border-red-500'); bOut.classList.replace('text-slate-600', 'text-red-400');
+                unitSect.classList.add('hidden');
+            } else {
+                bInv.classList.replace('border-slate-800', 'border-purple-500'); bInv.classList.replace('text-slate-600', 'text-purple-400');
+                unitSect.classList.remove('hidden');
+            }
+
+            selectKat.innerHTML = '';
+            categoryData[type].forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item; opt.text = item;
+                selectKat.appendChild(opt);
+            });
+        }
+
+        document.getElementById('formTx').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmit');
+            btn.disabled = true; btn.innerText = "PROCESSING...";
+
+            try {
+                const user = await window.getCurrentUser();
+                const dataTrans = {
+                    date: document.getElementById('tanggal').value,
+                    type: activeType,
+                    kategori: document.getElementById('kategori').value,
+                    amount: parseFloat(document.getElementById('nominal').value) || 0,
+                    note: document.getElementById('keterangan').value,
+                    unitCount: parseFloat(document.getElementById('unitCount').value || 0),
+                    unitType: document.getElementById('unitType').value || 'CASH',
+                    user_id: user.id
+                };
+
+                if (await window.saveTransactionToCloud(dataTrans)) {
+                    showToast("Transaksi Berhasil Disimpan");
+                    document.getElementById('formTx').reset();
+                    setTodayDate(); setType('pemasukan');
+                }
+            } catch (err) { showToast("Gagal Tersambung Cloud", true); } 
+            finally { btn.disabled = false; btn.innerText = "Commit Transaksi"; }
+        });
+
+        async function handleLogout() {
+            if (confirm("Akhiri Sesi Sistem?")) { await window.logoutUser(); window.location.href = 'login.html'; }
+        }
+
+        window.onload = securityCheck;
+        setType('pemasukan');
+    </script>
+</body>
+</html>

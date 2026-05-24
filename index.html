@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Asset Tracker Pro</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="apple-touch-icon" href="gambar1.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+    
+    <style>
+        html, body { background-color: #0d1117 !important; margin: 0; padding: 0; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+    </style>
+</head>
+
+<body class="bg-[#0d1117] text-slate-100 font-sans flex flex-col lg:flex-row h-screen overflow-hidden">
+
+    <aside class="w-full lg:w-64 bg-[#0d1117] border-t lg:border-t-0 lg:border-r border-slate-800 flex lg:flex-col order-last lg:order-first z-50">
+        <div class="p-6 hidden lg:flex flex-col items-center gap-3 border-b border-slate-800">
+            <img src="gambar1.png" alt="" class="w-16 h-16 rounded-2xl border border-slate-700 mb-2 shadow-lg">
+            <span class="text-[10px] font-black tracking-[0.3em] text-blue-500 uppercase italic">Asset Tracker</span>
+        </div>
+
+        <nav class="flex-1 flex lg:flex-col justify-around lg:justify-start lg:mt-6 overflow-y-auto">
+            <div>
+                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase hidden lg:block">Main</p>
+                <ul class="space-y-1 lg:px-3">
+                    <li>
+                        <a href="index.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 bg-slate-800/50 border-t-2 lg:border-t-0 lg:border-r-2 border-blue-500 text-blue-400 font-bold text-[10px] lg:text-xs uppercase tracking-widest rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">📊</span> <span class="ml-0 lg:ml-2">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="transaksi.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">💸</span> <span class="ml-0 lg:ml-2">Transactions</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="aset.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">💎</span> <span class="ml-0 lg:ml-2">Assets</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="mt-0 lg:mt-6">
+                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase hidden lg:block">Reports</p>
+                <ul class="space-y-1 lg:px-3">
+                    <li>
+                        <a href="history.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">📜</span> <span class="ml-0 lg:ml-2">History</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="bulanan.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">📅</span> <span class="ml-0 lg:ml-2">Monthly</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="tahunan.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
+                            <span class="lg:w-6 text-center">📈</span> <span class="ml-0 lg:ml-2">Yearly</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="p-6 hidden lg:block border-t border-slate-800">
+            <button onclick="handleLogout()" class="w-full py-3 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">
+                Exit System
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto p-6 lg:p-10 bg-[#0d1117]">
+        <header class="flex justify-between items-start mb-10 gap-4">
+            <div>
+                <h1 class="text-2xl lg:text-4xl font-black tracking-tight text-white italic uppercase leading-none">Operational Command</h1>
+                <p id="current-date-display" class="text-[9px] md:text-[10px] text-blue-400 font-bold uppercase tracking-[0.4em] mt-2 italic">Syncing Time...</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="px-4 py-2 bg-slate-800/40 border border-slate-800 rounded-2xl flex flex-col items-end gap-1 hidden sm:flex">
+                    <p class="text-[8px] font-black text-slate-500 uppercase italic">Retention Rate</p>
+                    <p id="savings-percent" class="text-xs font-black text-green-400">0%</p>
+                </div>
+                <button onclick="handleLogout()" class="lg:hidden p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl hover:bg-red-500 transition-all active:scale-90">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-10">
+            <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-6 rounded-[2rem] shadow-xl">
+                <p class="text-blue-100 text-[8px] font-bold uppercase tracking-widest mb-1 italic">Net Worth</p>
+                <div class="flex flex-wrap items-baseline gap-2 mt-1">
+                   <h3 id="net-worth" class="text-xl lg:text-2xl font-black text-white italic">Rp 0</h3>
+                   <span id="mom-velocity"></span>
+            </div>
+            </div>
+            <div class="bg-slate-800/60 p-6 rounded-[2rem] border border-slate-800 shadow-lg">
+                <p class="text-slate-500 text-[8px] font-bold uppercase tracking-widest mb-1 italic">Liquid Cash</p>
+                <div class="flex flex-wrap items-baseline gap-2 mt-1">
+                <h3 id="liquid-cash" class="text-xl lg:text-2xl font-black text-blue-400 italic">Rp 0</h3>
+                <span id="mom-liquid-velocity"></span>
+                </div>
+            </div>
+            <div class="bg-slate-800/60 p-6 rounded-[2rem] border border-slate-800 shadow-lg">
+                <p class="text-slate-500 text-[8px] font-bold uppercase tracking-widest mb-1 italic">Monthly Cashflow</p>
+                <h3 id="cashflow" class="text-xl lg:text-2xl font-black italic">Rp 0</h3>
+            </div>
+            <div class="bg-slate-800/60 p-6 rounded-[2rem] border border-slate-800 shadow-lg">
+                <p class="text-slate-500 text-[8px] font-bold uppercase tracking-widest mb-1 italic">Reserved Fund</p>
+                <div class="flex flex-wrap items-baseline gap-2 mt-1">
+                <h3 id="emergency-fund" class="text-xl lg:text-2xl font-black text-orange-500 italic">Rp 0</h3>
+                <span id="mom-emergency-velocity"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
+            <div class="lg:col-span-2 bg-slate-800/40 p-6 lg:p-10 rounded-[3rem] border border-slate-800 shadow-2xl">
+                <p class="text-slate-400 font-bold italic uppercase tracking-[0.2em] text-[10px] mb-8">Income Breakdown (%)</p>
+                <div class="w-full flex-1 relative min-h-[300px]">
+                    <canvas id="dashboardChart"></canvas>
+                </div>
+            </div>
+            <div class="bg-slate-800/40 p-8 lg:p-10 rounded-[3rem] border border-slate-800 shadow-2xl">
+                <h3 class="text-[10px] font-bold mb-10 text-slate-500 uppercase tracking-[0.2em] italic text-center">Strategic Allocation</h3>
+                <div id="allocation-list" class="space-y-8"></div>
+            </div>
+            </div>
+        
+            <div id="all-time-insight" class="text-sm text-slate-200 font-serif leading-relaxed italic"></div>
+    </main>
+
+    <script>
+        function startClock() {
+            const display = document.getElementById('current-date-display');
+            setInterval(() => {
+                const now = new Date();
+                const options = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
+                const dateStr = now.toLocaleDateString('id-ID', options).toUpperCase();
+                const timeStr = now.toLocaleTimeString('en-GB', { hour12: false });
+                display.innerText = `${dateStr} // ${timeStr}`;
+            }, 1000);
+        }
+
+        async function securityCheck() {
+            startClock();
+            try {
+                const user = await window.getCurrentUser();
+                if (!user) { window.location.href = 'login.html'; return; }
+                await window.renderDashboardLogic();
+            } catch (err) { console.warn("Database sync deferred:", err.message); }
+        
+        }
+
+        async function handleLogout() {
+            if (confirm("Akhiri Sesi Sistem?")) { await window.logoutUser(); window.location.href = 'login.html'; }
+        }
+
+        window.onload = securityCheck;
+    </script>
+</body>
+</html>

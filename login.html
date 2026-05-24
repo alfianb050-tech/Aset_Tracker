@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Asset Tracker</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="apple-touch-icon" href="gambar1.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="db.js"></script>
+
+    <style>
+        body { background-color: #020617; color: #f8fafc; }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+        .glow-shadow {
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.15);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-md p-10 glass-card rounded-[2.5rem] shadow-2xl glow-shadow">
+        <div class="text-center mb-10">
+            <div class="mb-6">
+                <img src="gambar1.png" alt="Logo" class="w-20 h-20 mx-auto rounded-3xl shadow-[0_0_30px_rgba(59,130,246,0.3)]">
+            </div>
+            
+            <img src="gambar2.png" alt="Asset Tracker" class="h-6 mx-auto mb-2">
+            
+            <p class="text-blue-500 text-[9px] font-black uppercase tracking-[0.4em] italic">Private Command Center</p>
+        </div>
+
+        <form id="loginForm" class="space-y-5">
+            <div>
+                <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2 px-1">Operator ID (Email)</label>
+                <input type="email" id="email" required
+                    class="w-full px-5 py-4 bg-slate-950/50 border border-slate-800 rounded-2xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all duration-300 text-sm"
+                    placeholder="operator@system.com">
+            </div>
+
+            <div>
+                <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2 px-1">Access Code (Password)</label>
+                <input type="password" id="password" required
+                    class="w-full px-5 py-4 bg-slate-950/50 border border-slate-800 rounded-2xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all duration-300 text-sm"
+                    placeholder="••••••••">
+            </div>
+
+            <button type="submit" id="btnLogin"
+                class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-2xl shadow-lg shadow-blue-900/40 active:scale-95 transition-all duration-300 uppercase tracking-widest italic text-[10px] mt-4">
+                Initialize System
+            </button>
+        </form>
+
+        <div id="errorMessage" class="hidden mt-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-[9px] font-black text-center rounded-xl uppercase italic tracking-tighter"></div>
+
+        <footer class="mt-10 text-center border-t border-slate-800/50 pt-6">
+            <div class="flex items-center justify-center gap-2">
+                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
+                <p class="text-slate-600 text-[8px] uppercase tracking-[0.3em] font-black">Encrypted Data Link Active</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const btnLogin = document.getElementById('btnLogin');
+
+        async function checkAuth() {
+            try {
+                const user = await window.getCurrentUser();
+                if (user) window.location.href = 'index.html';
+            } catch (e) { console.log("System Ready"); }
+        }
+        checkAuth();
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            btnLogin.innerText = 'Verifying Credentials...';
+            btnLogin.disabled = true;
+            errorMessage.classList.add('hidden');
+
+            try {
+                const data = await window.loginUser(email, password);
+                if (data && data.user) {
+                    window.location.href = 'index.html'; 
+                }
+            } catch (error) {
+                errorMessage.innerText = 'ACCESS DENIED: ' + error.message;
+                errorMessage.classList.remove('hidden');
+                btnLogin.innerText = 'INITIALIZE SYSTEM';
+                btnLogin.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

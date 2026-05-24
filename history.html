@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive | Asset Tracker Pro</title>
+    <link rel="apple-touch-icon" href="gambar1.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+    <style>
+        html, body { background-color: #0d1117 !important; margin: 0; padding: 0; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        select option { background: #0f172a; }
+        @keyframes slideDown { from { transform: translate(-50%, -100%); opacity: 0; } to { transform: translate(-50%, 20px); opacity: 1; } }
+        .toast-animate { animation: slideDown 0.4s ease forwards; }
+    </style>
+</head>
+
+<body class="bg-[#0d1117] text-slate-100 font-sans flex flex-col lg:flex-row h-screen overflow-hidden">
+
+    <div id="custom-toast" class="fixed top-0 left-1/2 -translate-x-1/2 z-[10000] hidden toast-animate">
+        <div id="toast-bg" class="bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-xl border border-blue-400/50 flex items-center gap-3">
+            <span id="toast-icon">🛡️</span><span id="toast-text" class="text-[10px] font-black uppercase italic tracking-widest">Success</span>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="fixed inset-0 z-[10001] bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-6">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-sm rounded-[2.5rem] p-8 shadow-2xl text-center">
+            <h3 class="text-xs font-black uppercase italic text-white mb-2">Hapus Catatan?</h3>
+            <p class="text-[10px] text-slate-400 uppercase font-bold mb-8 leading-relaxed">Data akan dihapus permanen dari sistem cloud.</p>
+            <div class="flex gap-3">
+                <button id="cancel-delete" class="flex-1 py-4 bg-slate-700 rounded-2xl text-[10px] font-black uppercase italic">Batal</button>
+                <button id="confirm-delete" class="flex-1 py-4 bg-red-600 rounded-2xl text-[10px] font-black uppercase italic shadow-lg shadow-red-900/50">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <aside class="w-full lg:w-64 bg-[#0d1117] border-t lg:border-t-0 lg:border-r border-slate-800 flex lg:flex-col order-last lg:order-first z-50">
+        <div class="p-6 hidden lg:flex flex-col items-center gap-3 border-b border-slate-800">
+            <img src="gambar1.png" class="w-16 h-16 rounded-2xl shadow-lg border border-slate-700 mb-2"><img src="gambar2.png" alt="Asset Tracker" class="h-5 w-auto">
+        </div>
+        
+        <nav class="flex-1 flex lg:flex-col justify-around lg:justify-start lg:mt-6 overflow-y-auto">
+            <div>
+                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase hidden lg:block">Main</p>
+                <ul class="space-y-1 lg:px-3">
+                    <li><a href="index.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg"><span class="lg:w-6 text-center">📊</span> <span class="ml-0 lg:ml-2">Dashboard</span></a></li>
+                    <li><a href="transaksi.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg"><span class="lg:w-6 text-center">💸</span> <span class="ml-0 lg:ml-2">Transactions</span></a></li>
+                    <li><a href="aset.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg"><span class="lg:w-6 text-center">💎</span> <span class="ml-0 lg:ml-2">Assets</span></a></li>
+                </ul>
+            </div>
+            <div class="mt-0 lg:mt-6">
+                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase hidden lg:block">Reports</p>
+                <ul class="space-y-1 lg:px-3">
+                    <li><a href="history.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 bg-slate-800/50 border-t-2 lg:border-t-0 lg:border-r-2 border-blue-500 text-blue-400 font-bold text-[10px] lg:text-xs uppercase tracking-widest rounded-none lg:rounded-lg"><span class="lg:w-6 text-center">📜</span> <span class="ml-0 lg:ml-2">History</span></a></li>
+                    <li><a href="bulanan.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg"><span class="lg:w-6 text-center">📅</span> <span class="ml-0 lg:ml-2">Monthly</span></a></li>
+                    <li><a href="tahunan.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg"><span class="lg:w-6 text-center">📈</span> <span class="ml-0 lg:ml-2">Yearly</span></a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="p-6 hidden lg:block border-t border-slate-800"><button onclick="handleLogout()" class="w-full py-3 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">Terminate System</button></div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto p-6 lg:p-10 bg-[#0d1117]">
+        <header class="flex justify-between items-start mb-8 gap-4">
+            <div>
+                <h1 class="text-2xl lg:text-4xl font-black text-white uppercase italic leading-none">Financial Archive</h1>
+                <p id="current-date-display" class="text-[9px] md:text-[10px] text-blue-400 font-bold uppercase tracking-[0.4em] mt-2 italic">Loading System Time...</p>
+                <p id="display-period" class="text-[8px] text-slate-500 font-black uppercase tracking-widest mt-1 italic opacity-60">Initializing...</p>
+            </div>
+            <button onclick="handleLogout()" class="lg:hidden p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl hover:bg-red-500 transition-all active:scale-90"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg></button>
+        </header>
+
+        <div id="tabs-container" class="lg:hidden flex bg-slate-950 p-1.5 rounded-2xl border border-slate-800 mb-8 shadow-inner overflow-hidden">
+            <a href="history.html" class="flex-1 text-center py-3 text-[10px] font-black uppercase italic rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-900/40">History</a>
+            <a href="bulanan.html" class="flex-1 text-center py-3 text-[10px] font-black uppercase italic rounded-xl text-slate-500 hover:bg-slate-800/20 transition duration-300">Monthly</a>
+            <a href="tahunan.html" class="flex-1 text-center py-3 text-[10px] font-black uppercase italic rounded-xl text-slate-500 hover:bg-slate-800/20 transition duration-300">Yearly</a>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 items-center justify-between bg-slate-800/40 p-4 rounded-3xl border border-slate-800 shadow-lg mb-8">
+            <div class="flex gap-2 w-full sm:w-auto flex-1 max-w-md">
+                <select id="filter-month" onchange="renderHistoryLogic()" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-[10px] font-black uppercase text-white outline-none focus:border-blue-500 italic cursor-pointer">
+                    <option value="01">Januari</option><option value="02">Februari</option><option value="03">Maret</option><option value="04">April</option><option value="05">Mei</option><option value="06">Juni</option><option value="07">Juli</option><option value="08">Agustus</option><option value="09">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option>
+                </select>
+                <select id="select-year" onchange="updateYearFilter(this.value)" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-[10px] font-black uppercase text-white outline-none focus:border-blue-500 italic cursor-pointer"></select>
+            </div>
+        </div>
+
+        <div class="bg-slate-800/40 rounded-[2.5rem] border border-slate-800 overflow-hidden shadow-2xl pb-4">
+            <div class="overflow-x-auto"><table class="w-full text-left border-collapse min-w-[700px]"><thead class="bg-slate-950 text-slate-500 border-b border-slate-800"><tr><th class="p-6 text-[9px] font-black uppercase italic pl-8">Tanggal</th><th class="p-6 text-[9px] font-black uppercase italic">Kategori</th><th class="p-6 text-[9px] font-black uppercase italic">Catatan</th><th class="p-6 text-[9px] font-black uppercase italic text-right">Nominal</th><th class="p-6 text-[9px] font-black uppercase italic text-center pr-8">Aksi</th></tr></thead><tbody id="historyBody" class="divide-y divide-slate-800/30 text-xs font-semibold"></tbody></table></div>
+        </div>
+    </main>
+
+    <script>
+        let deleteTargetId = null;
+        function startClock() { const display = document.getElementById('current-date-display'); setInterval(() => { const now = new Date(); const options = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }; display.innerText = `${now.toLocaleDateString('id-ID', options).toUpperCase()} // ${now.toLocaleTimeString('en-GB', { hour12: false })}`; }, 1000); }
+        function showToast(msg, isError = false) { const toast = document.getElementById('custom-toast'); document.getElementById('toast-text').innerText = msg; document.getElementById('toast-bg').className = isError ? "bg-red-600 text-white px-8 py-4 rounded-2xl shadow-xl border border-red-400/50 flex items-center gap-3" : "bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-xl border border-blue-400/50 flex items-center gap-3"; toast.classList.remove('hidden'); setTimeout(() => toast.classList.add('hidden'), 3000); }
+        async function securityCheck() { try { const user = await window.getCurrentUser(); if (!user) window.location.href = 'login.html'; } catch (err) { window.location.href = 'login.html'; } }
+        async function handleLogout() { if (confirm("Akhiri Sesi Sistem?")) { await window.logoutUser(); window.location.href = 'login.html'; } }
+        async function updateYearFilter(chosenYear) { window.generateYearOptions(parseInt(chosenYear)); await window.renderHistoryLogic(); }
+        function triggerDelete(id) { deleteTargetId = id; document.getElementById('confirm-modal').classList.remove('hidden'); }
+        document.getElementById('cancel-delete').onclick = () => { document.getElementById('confirm-modal').classList.add('hidden'); deleteTargetId = null; };
+        document.getElementById('confirm-delete').onclick = async () => { if (deleteTargetId) { if (await window.deleteTransactionFromCloud(deleteTargetId)) { showToast("Log Purged Successfully"); await window.renderHistoryLogic(); } document.getElementById('confirm-modal').classList.add('hidden'); } };
+
+        window.onload = async () => { startClock(); await securityCheck(); const now = new Date(); window.generateYearOptions(now.getFullYear()); document.getElementById('filter-month').value = String(now.getMonth() + 1).padStart(2, '0'); await window.renderHistoryLogic(); };
+    </script>
+</body>
+</html>
