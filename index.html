@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard | Asset Tracker Pro</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#3b82f6">
+    <meta name="theme-color" content="#0d1117">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="gambar1.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,69 +21,72 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #0d1117; }
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        /* Hilangkan scrollbar untuk tabs mobile biar lebih clean */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 
 <body class="bg-[#0d1117] text-slate-100 font-sans flex flex-col lg:flex-row h-screen overflow-hidden">
 
-    <aside class="w-full lg:w-64 bg-[#0d1117] border-t lg:border-t-0 lg:border-r border-slate-800 flex lg:flex-col order-last lg:order-first z-50">
-        <div class="p-6 hidden lg:flex flex-col items-center gap-3 border-b border-slate-800">
+    <aside class="hidden lg:flex flex-col w-64 bg-[#0d1117] border-r border-slate-800 z-50">
+        <div class="p-6 flex flex-col items-center gap-3 border-b border-slate-800">
             <img src="gambar1.png" alt="" class="w-16 h-16 rounded-2xl border border-slate-700 mb-2 shadow-lg">
             <span class="text-[10px] font-black tracking-[0.3em] text-blue-500 uppercase italic">Asset Tracker</span>
         </div>
 
-        <nav class="flex-1 flex lg:flex-col justify-around lg:justify-start lg:mt-6 overflow-y-auto">
+        <nav class="flex-1 flex flex-col justify-start mt-6 overflow-y-auto">
             <div>
-                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase hidden lg:block">Main</p>
-                <ul class="space-y-1 lg:px-3">
+                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase">Main</p>
+                <ul class="space-y-1 px-3">
                     <li>
-                        <a href="index.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 bg-slate-800/50 border-t-2 lg:border-t-0 lg:border-r-2 border-blue-500 text-blue-400 font-bold text-[10px] lg:text-xs uppercase tracking-widest rounded-none lg:rounded-lg">
-                            <span class="lg:w-6 text-center">📊</span> <span class="ml-0 lg:ml-2">Dashboard</span>
+                        <a href="index.html" class="flex items-center px-4 py-2.5 bg-slate-800/50 border-r-2 border-blue-500 text-blue-400 font-bold text-xs uppercase tracking-widest rounded-lg">
+                            <span class="w-6 text-center">📊</span> <span class="ml-2">Dashboard</span>
                         </a>
                     </li>
                     <li>
-                        <a href="transaksi.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
-                            <span class="lg:w-6 text-center">💸</span> <span class="ml-0 lg:ml-2">Transactions</span>
+                        <a href="transaksi.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
+                            <span class="w-6 text-center">💸</span> <span class="ml-2">Transactions</span>
                         </a>
                     </li>
                     <li>
-                        <a href="aset.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
-                            <span class="lg:w-6 text-center">💎</span> <span class="ml-0 lg:ml-2">Assets</span>
+                        <a href="aset.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
+                            <span class="w-6 text-center">💎</span> <span class="ml-2">Assets</span>
                         </a>
                     </li>
                 </ul>
             </div>
             
-            <div class="mt-0 lg:mt-6">
-                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase hidden lg:block">Reports</p>
-                <ul class="space-y-1 lg:px-3">
+            <div class="mt-6">
+                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase">Reports</p>
+                <ul class="space-y-1 px-3">
                     <li>
-                        <a href="history.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
-                            <span class="lg:w-6 text-center">📜</span> <span class="ml-0 lg:ml-2">History</span>
+                        <a href="history.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
+                            <span class="w-6 text-center">📜</span> <span class="ml-2">History</span>
                         </a>
                     </li>
                     <li>
-                        <a href="bulanan.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
-                            <span class="lg:w-6 text-center">📅</span> <span class="ml-0 lg:ml-2">Monthly</span>
+                        <a href="bulanan.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
+                            <span class="w-6 text-center">📅</span> <span class="ml-2">Monthly</span>
                         </a>
                     </li>
                     <li>
-                        <a href="tahunan.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg">
-                            <span class="lg:w-6 text-center">📈</span> <span class="ml-0 lg:ml-2">Yearly</span>
+                        <a href="tahunan.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
+                            <span class="w-6 text-center">📈</span> <span class="ml-2">Yearly</span>
                         </a>
                     </li>
                 </ul>
             </div>
         </nav>
 
-        <div class="p-6 hidden lg:block border-t border-slate-800">
+        <div class="p-6 border-t border-slate-800">
             <button onclick="handleLogout()" class="w-full py-3 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">
                 Exit System
             </button>
         </div>
     </aside>
 
-    <main class="flex-1 overflow-y-auto p-6 lg:p-10 bg-[#0d1117]">
+    <main class="flex-1 overflow-y-auto p-6 pb-24 lg:p-10 lg:pb-10 bg-[#0d1117]">
         <header class="flex justify-between items-start mb-10 gap-4">
             <div>
                 <h1 class="text-2xl lg:text-4xl font-black tracking-tight text-white italic uppercase leading-none">Operational Command</h1>
@@ -137,10 +142,31 @@
                 <h3 class="text-[10px] font-bold mb-10 text-slate-500 uppercase tracking-[0.2em] italic text-center">Strategic Allocation</h3>
                 <div id="allocation-list" class="space-y-8"></div>
             </div>
-            </div>
+        </div>
         
-            <div id="all-time-insight" class="text-sm text-slate-200 font-serif leading-relaxed italic"></div>
+        <div id="all-time-insight" class="text-sm text-slate-200 font-serif leading-relaxed italic"></div>
     </main>
+
+    <nav class="fixed bottom-0 w-full bg-[#0d1117]/95 backdrop-blur-md border-t border-slate-800 px-2 py-3 lg:hidden z-50">
+        <div class="flex justify-around items-center">
+            <a href="index.html" class="flex flex-col items-center text-blue-400">
+                <span class="text-xl">📊</span>
+                <span class="text-[9px] font-bold mt-1 uppercase tracking-widest">Dasbor</span>
+            </a>
+            <a href="transaksi.html" class="flex flex-col items-center text-slate-500 hover:text-blue-400 transition-all">
+                <span class="text-xl opacity-70">💸</span>
+                <span class="text-[9px] font-bold mt-1 uppercase tracking-widest">Transaksi</span>
+            </a>
+            <a href="aset.html" class="flex flex-col items-center text-slate-500 hover:text-blue-400 transition-all">
+                <span class="text-xl opacity-70">💎</span>
+                <span class="text-[9px] font-bold mt-1 uppercase tracking-widest">Aset</span>
+            </a>
+            <a href="history.html" class="flex flex-col items-center text-slate-500 hover:text-blue-400 transition-all">
+                <span class="text-xl opacity-70">📜</span>
+                <span class="text-[9px] font-bold mt-1 uppercase tracking-widest">History</span>
+            </a>
+        </div>
+    </nav>
 
     <script>
         function startClock() {
