@@ -647,8 +647,7 @@ if (tradingDeposit === 0 && tradingWD === 0) {
 
         </div>
 
-        <div class="bg-slate-800/40 p-6 rounded-[2rem] border border-slate-800 shadow-xl font-sans text-left mt-6">
-    <div class="flex justify-between items-center mb-6">
+       <div class="bg-slate-800/40 p-6 rounded-[2rem] border border-slate-800 shadow-xl font-sans text-left mt-6 mb-24"> <div class="flex justify-between items-center mb-6">
         <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 italic">Trading Performance</h4>
         <div id="trading-status-badge">${tradingStatusHTML}</div>
     </div>
@@ -670,7 +669,6 @@ if (tradingDeposit === 0 && tradingWD === 0) {
         </p>
     </div>
 </div>
-
     `;
 }
 
