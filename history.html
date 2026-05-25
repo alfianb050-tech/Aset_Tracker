@@ -2,10 +2,12 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Archive | Asset Tracker Pro</title>
-     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#3b82f6">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d1117">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="gambar1.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,6 +22,8 @@
         select option { background: #0f172a; }
         @keyframes slideDown { from { transform: translate(-50%, -100%); opacity: 0; } to { transform: translate(-50%, 20px); opacity: 1; } }
         .toast-animate { animation: slideDown 0.4s ease forwards; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 
@@ -42,46 +46,48 @@
         </div>
     </div>
 
-    <aside class="w-full lg:w-64 bg-[#0d1117] border-t lg:border-t-0 lg:border-r border-slate-800 flex lg:flex-col order-last lg:order-first z-50">
-        <div class="p-6 hidden lg:flex flex-col items-center gap-3 border-b border-slate-800">
-            <img src="gambar1.png" class="w-16 h-16 rounded-2xl shadow-lg border border-slate-700 mb-2"><img src="gambar2.png" alt="Asset Tracker" class="h-5 w-auto">
+    <aside class="hidden lg:flex flex-col w-64 bg-[#0d1117] border-r border-slate-800 z-50">
+        <div class="p-6 flex flex-col items-center gap-3 border-b border-slate-800">
+            <img src="gambar1.png" class="w-16 h-16 rounded-2xl shadow-lg border border-slate-700 mb-2">
+            <span class="text-[10px] font-black tracking-[0.3em] text-blue-500 uppercase italic">Asset Tracker</span>
         </div>
         
-        <nav class="flex-1 flex lg:flex-col justify-around lg:justify-start lg:mt-6 overflow-y-auto">
+        <nav class="flex-1 flex flex-col justify-start mt-6 overflow-y-auto">
             <div>
-                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase hidden lg:block">Main</p>
-                <ul class="space-y-1 lg:px-3">
-                    <li><a href="index.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg"><span class="lg:w-6 text-center">📊</span> <span class="ml-0 lg:ml-2">Dashboard</span></a></li>
-                    <li><a href="transaksi.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg"><span class="lg:w-6 text-center">💸</span> <span class="ml-0 lg:ml-2">Transactions</span></a></li>
-                    <li><a href="aset.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg"><span class="lg:w-6 text-center">💎</span> <span class="ml-0 lg:ml-2">Assets</span></a></li>
+                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase">Main</p>
+                <ul class="space-y-1 px-3">
+                    <li><a href="index.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg"><span class="w-6 text-center">📊</span> <span class="ml-2">Dashboard</span></a></li>
+                    <li><a href="transaksi.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg"><span class="w-6 text-center">💸</span> <span class="ml-2">Transactions</span></a></li>
+                    <li><a href="aset.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg"><span class="w-6 text-center">💎</span> <span class="ml-2">Assets</span></a></li>
                 </ul>
             </div>
-            <div class="mt-0 lg:mt-6">
-                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase hidden lg:block">Reports</p>
-                <ul class="space-y-1 lg:px-3">
-                    <li><a href="history.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 bg-slate-800/50 border-t-2 lg:border-t-0 lg:border-r-2 border-blue-500 text-blue-400 font-bold text-[10px] lg:text-xs uppercase tracking-widest rounded-none lg:rounded-lg"><span class="lg:w-6 text-center">📜</span> <span class="ml-0 lg:ml-2">History</span></a></li>
-                    <li><a href="bulanan.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg"><span class="lg:w-6 text-center">📅</span> <span class="ml-0 lg:ml-2">Monthly</span></a></li>
-                    <li><a href="tahunan.html" class="flex flex-col lg:flex-row items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-[10px] lg:text-xs uppercase tracking-widest transition-all rounded-none lg:rounded-lg"><span class="lg:w-6 text-center">📈</span> <span class="ml-0 lg:ml-2">Yearly</span></a></li>
+            <div class="mt-6">
+                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase">Reports</p>
+                <ul class="space-y-1 px-3">
+                    <li><a href="history.html" class="flex items-center px-4 py-2.5 bg-slate-800/50 border-r-2 border-blue-500 text-blue-400 font-bold text-xs uppercase tracking-widest rounded-lg"><span class="w-6 text-center">📜</span> <span class="ml-2">History</span></a></li>
+                    <li><a href="bulanan.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg"><span class="w-6 text-center">📅</span> <span class="ml-2">Monthly</span></a></li>
+                    <li><a href="tahunan.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg"><span class="w-6 text-center">📈</span> <span class="ml-2">Yearly</span></a></li>
                 </ul>
             </div>
         </nav>
-        <div class="p-6 hidden lg:block border-t border-slate-800"><button onclick="handleLogout()" class="w-full py-3 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">Terminate System</button></div>
+        <div class="p-6 border-t border-slate-800">
+            <button onclick="openLogoutModal()" class="w-full py-3 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">Terminate System</button>
+        </div>
     </aside>
 
-    <main class="flex-1 overflow-y-auto p-6 lg:p-10 bg-[#0d1117]">
-        <header class="flex justify-between items-start mb-8 gap-4">
+    <main class="flex-1 overflow-y-auto p-6 pb-24 lg:p-10 bg-[#0d1117]">
+        <header class="flex justify-between items-start mb-6 gap-4">
             <div>
                 <h1 class="text-2xl lg:text-4xl font-black text-white uppercase italic leading-none">Financial Archive</h1>
                 <p id="current-date-display" class="text-[9px] md:text-[10px] text-blue-400 font-bold uppercase tracking-[0.4em] mt-2 italic">Loading System Time...</p>
                 <p id="display-period" class="text-[8px] text-slate-500 font-black uppercase tracking-widest mt-1 italic opacity-60">Initializing...</p>
             </div>
-            <button onclick="handleLogout()" class="lg:hidden p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl hover:bg-red-500 transition-all active:scale-90"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg></button>
         </header>
 
-        <div id="tabs-container" class="lg:hidden flex bg-slate-950 p-1.5 rounded-2xl border border-slate-800 mb-8 shadow-inner overflow-hidden">
-            <a href="history.html" class="flex-1 text-center py-3 text-[10px] font-black uppercase italic rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-900/40">History</a>
-            <a href="bulanan.html" class="flex-1 text-center py-3 text-[10px] font-black uppercase italic rounded-xl text-slate-500 hover:bg-slate-800/20 transition duration-300">Monthly</a>
-            <a href="tahunan.html" class="flex-1 text-center py-3 text-[10px] font-black uppercase italic rounded-xl text-slate-500 hover:bg-slate-800/20 transition duration-300">Yearly</a>
+        <div id="tabs-container" class="lg:hidden flex overflow-x-auto whitespace-nowrap gap-2 pb-2 mb-6 hide-scrollbar">
+            <a href="history.html" class="inline-block px-8 py-3 text-[10px] font-black uppercase italic rounded-full bg-blue-600 text-white shadow-lg shadow-blue-900/40">History</a>
+            <a href="bulanan.html" class="inline-block px-8 py-3 text-[10px] font-black uppercase italic rounded-full bg-slate-900 border border-slate-700 text-slate-400 hover:text-white transition duration-300">Monthly</a>
+            <a href="tahunan.html" class="inline-block px-8 py-3 text-[10px] font-black uppercase italic rounded-full bg-slate-900 border border-slate-700 text-slate-400 hover:text-white transition duration-300">Yearly</a>
         </div>
 
         <div class="flex flex-col sm:flex-row gap-4 items-center justify-between bg-slate-800/40 p-4 rounded-3xl border border-slate-800 shadow-lg mb-8">
@@ -98,16 +104,91 @@
         </div>
     </main>
 
+    <nav class="fixed bottom-0 w-full bg-[#0d1117]/95 backdrop-blur-md border-t border-slate-800 px-1 py-3 lg:hidden z-50">
+        <div class="flex justify-between items-center px-2">
+            <a href="index.html" class="flex flex-col items-center w-1/5 text-slate-500 hover:text-blue-400 transition-all">
+                <span class="text-lg opacity-70">📊</span>
+                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">Dasbor</span>
+            </a>
+            <a href="transaksi.html" class="flex flex-col items-center w-1/5 text-slate-500 hover:text-blue-400 transition-all">
+                <span class="text-lg opacity-70">💸</span>
+                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">Transaksi</span>
+            </a>
+            <a href="aset.html" class="flex flex-col items-center w-1/5 text-slate-500 hover:text-blue-400 transition-all">
+                <span class="text-lg opacity-70">💎</span>
+                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">Aset</span>
+            </a>
+            <a href="history.html" class="flex flex-col items-center w-1/5 text-blue-400">
+                <span class="text-lg">📜</span>
+                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">History</span>
+            </a>
+            <button onclick="openLogoutModal()" class="flex flex-col items-center w-1/5 text-red-900/70 hover:text-red-500 transition-all active:scale-90">
+                <svg class="w-5 h-5 mb-[2px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                <span class="text-[8px] font-bold uppercase tracking-widest">Keluar</span>
+            </button>
+        </div>
+    </nav>
+
+    <div id="logout-modal" class="fixed inset-0 bg-[#0d1117]/90 backdrop-blur-sm z-[99999] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-xs shadow-2xl transform scale-95 transition-transform duration-300" id="logout-modal-content">
+            <div class="flex flex-col items-center text-center">
+                <div class="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mb-4 border border-red-500/20">
+                    <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+                <h3 class="text-white font-black text-base italic uppercase tracking-widest mb-1">System Exit</h3>
+                <p class="text-slate-400 text-[10px] font-medium mb-6 uppercase tracking-wider">Putuskan koneksi dari server?</p>
+                <div class="flex gap-3 w-full">
+                    <button onclick="closeLogoutModal()" class="flex-1 py-3 rounded-xl border border-slate-700 text-slate-300 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all">Batal</button>
+                    <button onclick="executeRealLogout()" class="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-red-900/50 transition-all">Keluar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         let deleteTargetId = null;
         function startClock() { const display = document.getElementById('current-date-display'); setInterval(() => { const now = new Date(); const options = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }; display.innerText = `${now.toLocaleDateString('id-ID', options).toUpperCase()} // ${now.toLocaleTimeString('en-GB', { hour12: false })}`; }, 1000); }
         function showToast(msg, isError = false) { const toast = document.getElementById('custom-toast'); document.getElementById('toast-text').innerText = msg; document.getElementById('toast-bg').className = isError ? "bg-red-600 text-white px-8 py-4 rounded-2xl shadow-xl border border-red-400/50 flex items-center gap-3" : "bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-xl border border-blue-400/50 flex items-center gap-3"; toast.classList.remove('hidden'); setTimeout(() => toast.classList.add('hidden'), 3000); }
         async function securityCheck() { try { const user = await window.getCurrentUser(); if (!user) window.location.href = 'login.html'; } catch (err) { window.location.href = 'login.html'; } }
-        async function handleLogout() { if (confirm("Akhiri Sesi Sistem?")) { await window.logoutUser(); window.location.href = 'login.html'; } }
         async function updateYearFilter(chosenYear) { window.generateYearOptions(parseInt(chosenYear)); await window.renderHistoryLogic(); }
         function triggerDelete(id) { deleteTargetId = id; document.getElementById('confirm-modal').classList.remove('hidden'); }
         document.getElementById('cancel-delete').onclick = () => { document.getElementById('confirm-modal').classList.add('hidden'); deleteTargetId = null; };
         document.getElementById('confirm-delete').onclick = async () => { if (deleteTargetId) { if (await window.deleteTransactionFromCloud(deleteTargetId)) { showToast("Log Purged Successfully"); await window.renderHistoryLogic(); } document.getElementById('confirm-modal').classList.add('hidden'); } };
+
+        // LOGIKA MODAL LOGOUT
+        function openLogoutModal() {
+            const modal = document.getElementById('logout-modal');
+            const content = document.getElementById('logout-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeLogoutModal() {
+            const modal = document.getElementById('logout-modal');
+            const content = document.getElementById('logout-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        async function executeRealLogout() {
+            try {
+                if (typeof window.logoutUser === 'function') {
+                    await window.logoutUser();
+                } else {
+                    await supabase.auth.signOut();
+                }
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error("Gagal keluar:", error);
+                alert("Terjadi kesalahan saat logout. Coba lagi.");
+            }
+        }
 
         window.onload = async () => { startClock(); await securityCheck(); const now = new Date(); window.generateYearOptions(now.getFullYear()); document.getElementById('filter-month').value = String(now.getMonth() + 1).padStart(2, '0'); await window.renderHistoryLogic(); };
     </script>
