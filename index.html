@@ -80,7 +80,7 @@
         </nav>
 
         <div class="p-6 border-t border-slate-800">
-            <button onclick="handleLogout()" class="w-full py-3 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">
+            <button onclick="openLogoutModal()" class="w-full py-3 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">
                 Exit System
             </button>
         </div>
@@ -97,9 +97,6 @@
                     <p class="text-[8px] font-black text-slate-500 uppercase italic">Retention Rate</p>
                     <p id="savings-percent" class="text-xs font-black text-green-400">0%</p>
                 </div>
-                <button onclick="handleLogout()" class="lg:hidden p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl hover:bg-red-500 transition-all active:scale-90">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                </button>
             </div>
         </header>
 
@@ -147,26 +144,44 @@
         <div id="all-time-insight" class="text-sm text-slate-200 font-serif leading-relaxed italic"></div>
     </main>
 
-    <nav class="fixed bottom-0 w-full bg-[#0d1117]/95 backdrop-blur-md border-t border-slate-800 px-2 py-3 lg:hidden z-50">
-        <div class="flex justify-around items-center">
-            <a href="index.html" class="flex flex-col items-center text-blue-400">
-                <span class="text-xl">📊</span>
-                <span class="text-[9px] font-bold mt-1 uppercase tracking-widest">Dasbor</span>
+    <nav class="fixed bottom-0 w-full bg-[#0d1117]/95 backdrop-blur-md border-t border-slate-800 px-1 py-3 lg:hidden z-50">
+        <div class="flex justify-between items-center px-2">
+            <a href="index.html" class="flex flex-col items-center w-1/5 text-slate-500 hover:text-blue-400 transition-all">
+                <span class="text-lg opacity-70">📊</span>
+                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">Dasbor</span>
             </a>
-            <a href="transaksi.html" class="flex flex-col items-center text-slate-500 hover:text-blue-400 transition-all">
-                <span class="text-xl opacity-70">💸</span>
-                <span class="text-[9px] font-bold mt-1 uppercase tracking-widest">Transaksi</span>
+            <a href="transaksi.html" class="flex flex-col items-center w-1/5 text-blue-400"> <span class="text-lg">💸</span>
+                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">Transaksi</span>
             </a>
-            <a href="aset.html" class="flex flex-col items-center text-slate-500 hover:text-blue-400 transition-all">
-                <span class="text-xl opacity-70">💎</span>
-                <span class="text-[9px] font-bold mt-1 uppercase tracking-widest">Aset</span>
+            <a href="aset.html" class="flex flex-col items-center w-1/5 text-slate-500 hover:text-blue-400 transition-all">
+                <span class="text-lg opacity-70">💎</span>
+                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">Aset</span>
             </a>
-            <a href="history.html" class="flex flex-col items-center text-slate-500 hover:text-blue-400 transition-all">
-                <span class="text-xl opacity-70">📜</span>
-                <span class="text-[9px] font-bold mt-1 uppercase tracking-widest">History</span>
+            <a href="history.html" class="flex flex-col items-center w-1/5 text-slate-500 hover:text-blue-400 transition-all">
+                <span class="text-lg opacity-70">📜</span>
+                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">History</span>
             </a>
+            <button onclick="openLogoutModal()" class="flex flex-col items-center w-1/5 text-red-900/70 hover:text-red-500 transition-all active:scale-90">
+                <svg class="w-5 h-5 mb-[2px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                <span class="text-[8px] font-bold uppercase tracking-widest">Keluar</span>
+            </button>
         </div>
     </nav>
+    <div id="logout-modal" class="fixed inset-0 bg-[#0d1117]/90 backdrop-blur-sm z-[99999] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-xs shadow-2xl transform scale-95 transition-transform duration-300" id="logout-modal-content">
+            <div class="flex flex-col items-center text-center">
+                <div class="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mb-4 border border-red-500/20">
+                    <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+                <h3 class="text-white font-black text-base italic uppercase tracking-widest mb-1">System Exit</h3>
+                <p class="text-slate-400 text-[10px] font-medium mb-6 uppercase tracking-wider">Putuskan koneksi dari server?</p>
+                <div class="flex gap-3 w-full">
+                    <button onclick="closeLogoutModal()" class="flex-1 py-3 rounded-xl border border-slate-700 text-slate-300 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all">Batal</button>
+                    <button onclick="executeRealLogout()" class="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-red-900/50 transition-all">Keluar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         function startClock() {
@@ -190,8 +205,35 @@
         
         }
 
-        async function handleLogout() {
-            if (confirm("Akhiri Sesi Sistem?")) { await window.logoutUser(); window.location.href = 'login.html'; }
+       // --- LOGIKA MODAL LOGOUT UDAH DIGABUNG DI SINI ---
+        function openLogoutModal() {
+            const modal = document.getElementById('logout-modal');
+            const content = document.getElementById('logout-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeLogoutModal() {
+            const modal = document.getElementById('logout-modal');
+            const content = document.getElementById('logout-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        async function executeRealLogout() {
+            try {
+                await window.logoutUser(); 
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error("Gagal keluar:", error);
+                alert("Terjadi kesalahan saat logout. Coba lagi.");
+            }
         }
 
         window.onload = securityCheck;
