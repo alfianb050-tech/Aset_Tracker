@@ -92,7 +92,7 @@
         </nav>
 
         <div class="p-6 border-t border-slate-800">
-            <button onclick="handleLogout()" class="w-full py-3 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">
+            <button onclick="openLogoutModal()" class="w-full py-3 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">
                 Exit System
             </button>
         </div>
@@ -193,7 +193,7 @@
         </div>
     </div>
 
-    <script>
+   <script>
         let activeType = 'pemasukan';
         const categoryData = {
             pemasukan: ['Gaji', 'WD Profit Trading', 'Dana Darurat', 'Bonus', 'Lain-lain'],
@@ -289,43 +289,37 @@
             finally { btn.disabled = false; btn.innerText = "Commit Transaksi"; }
         });
 
-       <script>
-    // 1. Logika buat Munculin Pop-up
-    function openLogoutModal() {
-        const modal = document.getElementById('logout-modal');
-        const content = document.getElementById('logout-modal-content');
-        modal.classList.remove('hidden');
-        // Delay 10ms biar animasi CSS kebaca
-        setTimeout(() => {
-            modal.classList.remove('opacity-0');
-            content.classList.remove('scale-95');
-        }, 10);
-    }
-
-    // 2. Logika buat Nutup Pop-up kalau batal
-    function closeLogoutModal() {
-        const modal = document.getElementById('logout-modal');
-        const content = document.getElementById('logout-modal-content');
-        modal.classList.add('opacity-0');
-        content.classList.add('scale-95');
-        // Tunggu animasi nutup selesai (300ms) baru di-hidden
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 300);
-    }
-
-    // 3. Eksekusi Asli (Gantiin confirm bawaan browser)
-    async function executeRealLogout() {
-        try {
-            // Ini manggil fungsi logout bawaan lu yang sebelumnya
-            await window.logoutUser(); 
-            window.location.href = 'login.html';
-        } catch (error) {
-            console.error("Gagal keluar:", error);
-            alert("Terjadi kesalahan saat logout. Coba lagi.");
+        // --- LOGIKA MODAL LOGOUT UDAH DIGABUNG DI SINI ---
+        function openLogoutModal() {
+            const modal = document.getElementById('logout-modal');
+            const content = document.getElementById('logout-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
         }
-    }
-</script>
+
+        function closeLogoutModal() {
+            const modal = document.getElementById('logout-modal');
+            const content = document.getElementById('logout-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        async function executeRealLogout() {
+            try {
+                await window.logoutUser(); 
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error("Gagal keluar:", error);
+                alert("Terjadi kesalahan saat logout. Coba lagi.");
+            }
+        }
+
         window.onload = securityCheck;
         setType('pemasukan');
     </script>
