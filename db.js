@@ -23,14 +23,14 @@ window.loginUser = async function(email, password) {
     }
 };
 
-// Logout: Bersihkan session dan balik ke login
+// Logout: Bersihkan session (redirect ditangani oleh masing-masing halaman)
 window.logoutUser = async function() {
     try {
         const { error } = await _supabase.auth.signOut();
         if (error) throw error;
-        window.location.href = 'login.html';
     } catch (err) {
         console.error('Logout Error:', err.message);
+        throw err; // Lempar error agar halaman bisa handle
     }
 };
 

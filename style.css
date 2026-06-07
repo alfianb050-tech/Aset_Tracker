@@ -1,0 +1,228 @@
+/* ============================================================
+   ASSET TRACKER PRO — CENTRALIZED STYLESHEET
+   Animasi, Transisi, Dark Mode Konsisten, Form UX
+   ============================================================ */
+
+/* ── BASE ── */
+html, body {
+    background-color: #0d1117 !important;
+    margin: 0; padding: 0;
+    -webkit-font-smoothing: antialiased;}
+
+ * ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0d1117; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #334155; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.hide-scrollbar::-webkit-scrollbar {display: none;}
+
+/* ── ANIMASI MASUK HALAMAN ── */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: scale(1); }
+}
+@keyframes slideDown {
+    from { transform: translate(-50%, -100%); opacity: 0; }
+    to   { transform: translate(-50%, 20px); opacity: 1; }
+}
+@keyframes shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+}
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    50%       { box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
+}
+@keyframes countUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── UTILITY ANIMATION CLASSES ── */
+.animate-fade-in        { animation: fadeIn 0.4s ease forwards; }
+.animate-fade-in-up     { animation: fadeInUp 0.45s ease forwards; }
+.animate-fade-in-down   { animation: fadeInDown 0.35s ease forwards; }
+.animate-scale-in       { animation: scaleIn 0.4s cubic-bezier(.22,1,.36,1) forwards; }
+.toast-animate          { animation: slideDown 0.4s ease forwards; }
+.animate-count-up       { animation: countUp 0.5s ease forwards; }
+
+/* Stagger anak elemen (untuk card grid & list) */
+.stagger > * { opacity: 0; animation: fadeInUp 0.4s ease forwards; }
+.stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger > *:nth-child(2) { animation-delay: 0.10s; }
+.stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger > *:nth-child(4) { animation-delay: 0.20s; }
+.stagger > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger > *:nth-child(6) { animation-delay: 0.30s; }
+
+/* ── SKELETON LOADING ── */
+.skeleton {
+    background: linear-gradient(90deg, #1e293b 25%, #273449 50%, #1e293b 75%);
+    background-size: 400px 100%;
+    animation: shimmer 1.4s infinite linear;
+    border-radius: 0.75rem;
+}
+
+/* ── FORM INPUTS — SMOOTH & KONSISTEN ── */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    background-color: #0f172a;
+    border-color: #334155;
+    color: #f1f5f9;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    outline: none;
+    background-color: #111827;
+}
+
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="number"]:hover,
+input[type="date"]:hover,
+select:hover {
+    border-color: #475569;
+}
+
+/* Input number — hilangkan spinner bawaan */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; appearance: none; }
+
+/* Date input — icon color */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5) sepia(1) saturate(2) hue-rotate(190deg);
+    cursor: pointer;
+}
+
+/* Select option background dark */
+select option { background: #0f172a; color: #f1f5f9; }
+
+/* ── TOMBOL — TRANSISI HALUS ── */
+button {
+    transition: background-color 0.2s ease, color 0.2s ease,
+                border-color 0.2s ease, transform 0.15s ease,
+                box-shadow 0.2s ease, opacity 0.2s ease;
+}
+button:active:not(:disabled) { transform: scale(0.96); }
+button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* Submit / primary button pulse on focus */
+button[type="submit"]:focus,
+button#btnSubmit:focus {
+    animation: pulse-glow 1.5s infinite;
+}
+
+/* ── CARD HOVER — KONSISTEN ── */
+.card-hover {
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+    transform: translateY(-2px);
+    border-color: rgba(59, 130, 246, 0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+
+/* ── SIDEBAR NAV LINK ── */
+aside nav a {
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* ── TABLE ROW ── */
+tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+/* ── MODAL BACKDROP ── */
+.modal-backdrop {
+    transition: opacity 0.25s ease;
+}
+.modal-content {
+    transition: transform 0.25s cubic-bezier(.22,1,.36,1), opacity 0.25s ease;
+}
+
+/* ── TOAST ── */
+#custom-toast {
+    transition: opacity 0.3s ease;
+}
+
+/* ── NUMBER COUNTER ANIMATION ── */
+.stat-value {
+    animation: countUp 0.6s ease forwards;
+}
+
+/* ── LOADING STATE TEXT ── */
+.loading-pulse {
+    animation: pulse 1.5s cubic-bezier(0.4,0,0.6,1) infinite;
+}
+
+/* ── PAGE TRANSITION ── */
+main {
+    animation: fadeIn 0.35s ease forwards;
+}
+
+/* ── MOBILE TAB BAR ── */
+nav.fixed a, nav.fixed button {
+    transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+/* ── CHART TOOLTIP ── */
+.chartjs-tooltip {
+    border-radius: 12px !important;
+}
+
+/* ── DARK MODE CONSISTENCY ── */
+/* Pastikan semua bg container uniform */
+.bg-slate-800\/40  { background-color: rgba(30, 41, 59, 0.4); }
+.bg-slate-800\/60  { background-color: rgba(30, 41, 59, 0.6); }
+.bg-slate-950      { background-color: #020617; }
+
+/* ── FORM LABEL ANIMATION ── */
+.form-group {
+    position: relative;
+}
+.form-group label {
+    transition: color 0.2s ease;
+}
+.form-group:focus-within label {
+    color: #60a5fa;
+}
+
+/* ── AMOUNT INPUT FORMAT DISPLAY ── */
+.amount-display {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+    main { padding-bottom: 5rem; }
+}

@@ -9,126 +9,103 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="gambar1.png">
-    
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="db.js"></script>
     <script src="app.js"></script>
-    
-    <style>
-        html, body { background-color: #0d1117 !important; margin: 0; padding: 0; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #0d1117; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-        /* Hilangkan scrollbar untuk tabs mobile biar lebih clean */
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
 </head>
 
 <body class="bg-[#0d1117] text-slate-100 font-sans flex flex-col lg:flex-row h-screen overflow-hidden">
 
-    <aside class="hidden lg:flex flex-col w-64 bg-[#0d1117] border-r border-slate-800 z-50">
-        <div class="p-6 flex flex-col items-center gap-3 border-b border-slate-800">
-            <img src="gambar1.png" alt="" class="w-16 h-16 rounded-2xl border border-slate-700 mb-2 shadow-lg">
-            <span class="text-[10px] font-black tracking-[0.3em] text-blue-500 uppercase italic">Asset Tracker</span>
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SIDEBAR                                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <aside class="hidden lg:flex flex-col w-64 bg-[#0d1117] border-r border-slate-800 z-50" style="height:100vh;">
+
+        <!-- Logo -->
+        <div class="flex flex-col items-center gap-1 border-b border-slate-800 py-4 flex-shrink-0">
+            <img src="gambar1.png" alt="" class="w-12 h-12 rounded-2xl border border-slate-700 shadow-lg">
+            <span class="text-[9px] font-black tracking-[0.3em] text-blue-500 uppercase italic">Asset Tracker</span>
         </div>
 
-        <nav class="flex-1 flex flex-col justify-start mt-6 overflow-y-auto">
-            <div>
-                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase">Main</p>
-                <ul class="space-y-1 px-3">
-                    <li>
-                        <a href="index.html" class="flex items-center px-4 py-2.5 bg-slate-800/50 border-r-2 border-blue-500 text-blue-400 font-bold text-xs uppercase tracking-widest rounded-lg">
-                            <span class="w-6 text-center">📊</span> <span class="ml-2">Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="transaksi.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
-                            <span class="w-6 text-center">💸</span> <span class="ml-2">Transactions</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="aset.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
-                            <span class="w-6 text-center">💎</span> <span class="ml-2">Assets</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            
-            <div class="mt-6">
-                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase">Reports</p>
-                <ul class="space-y-1 px-3">
-                    <li>
-                        <a href="history.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
-                            <span class="w-6 text-center">📜</span> <span class="ml-2">History</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="bulanan.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
-                            <span class="w-6 text-center">📅</span> <span class="ml-2">Monthly</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="tahunan.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
-                            <span class="w-6 text-center">📈</span> <span class="ml-2">Yearly</span>
-                        </a>
-                    </li>
-                </ul>
+        <!-- Nav — flex-1 tapi tidak overflow -->
+        <nav class="flex flex-col flex-1 px-3 py-3 gap-1">
+            <p class="text-[8px] text-slate-500 font-bold px-2 tracking-widest uppercase mb-1">Main</p>
+            <a href="index.html" class="flex items-center px-3 py-2 bg-slate-800/50 border-r-2 border-blue-500 text-blue-400 font-bold text-[10px] uppercase tracking-widest rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">📊</span><span class="ml-2">Dashboard</span></a>
+            <a href="transaksi.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">💸</span><span class="ml-2">Transactions</span></a>
+            <a href="aset.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">💎</span><span class="ml-2">Assets</span></a>
+
+            <p class="text-[8px] text-slate-500 font-bold px-2 tracking-widest uppercase mb-1 mt-2">Reports</p>
+            <a href="history.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">📜</span><span class="ml-2">History</span></a>
+            <a href="bulanan.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">📅</span><span class="ml-2">Monthly</span></a>
+            <a href="tahunan.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">📈</span><span class="ml-2">Yearly</span></a>
+
+            <p class="text-[8px] text-slate-500 font-bold px-2 tracking-widest uppercase mb-1 mt-2">Intelligence</p>
+            <a href="ai.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">🤖</span><span class="ml-2">AI Advisor</span></a>
+
+            <!-- Spacer dorong logout ke bawah -->
+            <div class="flex-1"></div>
+
+            <!-- Logout di dalam nav, nempel di bawah -->
+            <div class="border-t border-slate-800 pt-3 flex-shrink-0">
+                <button onclick="openLogoutModal()" class="w-full py-2.5 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">
+                    Exit System
+                </button>
             </div>
         </nav>
-
-        <div class="p-6 border-t border-slate-800">
-            <button onclick="openLogoutModal()" class="w-full py-3 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">
-                Exit System
-            </button>
-        </div>
     </aside>
 
+    <!-- ═══════════════════════════════════════ -->
+    <!-- MAIN CONTENT                             -->
+    <!-- ═══════════════════════════════════════ -->
     <main class="flex-1 overflow-y-auto p-6 pb-36 lg:p-10 lg:pb-10 bg-[#0d1117]">
+
         <header class="flex justify-between items-start mb-10 gap-4">
             <div>
                 <h1 class="text-2xl lg:text-4xl font-black tracking-tight text-white italic uppercase leading-none">Operational Command</h1>
                 <p id="current-date-display" class="text-[9px] md:text-[10px] text-blue-400 font-bold uppercase tracking-[0.4em] mt-2 italic">Syncing Time...</p>
             </div>
             <div class="flex items-center gap-3">
-                <div class="px-4 py-2 bg-slate-800/40 border border-slate-800 rounded-2xl flex flex-col items-end gap-1 hidden sm:flex">
+                <div class="px-4 py-2 bg-slate-800/40 border border-slate-800 rounded-2xl hidden sm:flex flex-col items-end gap-1">
                     <p class="text-[8px] font-black text-slate-500 uppercase italic">Retention Rate</p>
                     <p id="savings-percent" class="text-xs font-black text-green-400">0%</p>
                 </div>
             </div>
         </header>
 
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-10">
-            <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-6 rounded-[2rem] shadow-xl">
+        <!-- Stat Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-10 stagger">
+            <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-6 rounded-[2rem] shadow-xl card-hover">
                 <p class="text-blue-100 text-[8px] font-bold uppercase tracking-widest mb-1 italic">Net Worth</p>
                 <div class="flex flex-wrap items-baseline gap-2 mt-1">
-                   <h3 id="net-worth" class="text-xl lg:text-2xl font-black text-white italic">Rp 0</h3>
-                   <span id="mom-velocity"></span>
-            </div>
-            </div>
-            <div class="bg-slate-800/60 p-6 rounded-[2rem] border border-slate-800 shadow-lg">
-                <p class="text-slate-500 text-[8px] font-bold uppercase tracking-widest mb-1 italic">Liquid Cash</p>
-                <div class="flex flex-wrap items-baseline gap-2 mt-1">
-                <h3 id="liquid-cash" class="text-xl lg:text-2xl font-black text-blue-400 italic">Rp 0</h3>
-                <span id="mom-liquid-velocity"></span>
+                    <h3 id="net-worth" class="text-xl lg:text-2xl font-black text-white italic">Rp 0</h3>
+                    <span id="mom-velocity"></span>
                 </div>
             </div>
-            <div class="bg-slate-800/60 p-6 rounded-[2rem] border border-slate-800 shadow-lg">
+            <div class="bg-slate-800/60 p-6 rounded-[2rem] border border-slate-800 shadow-lg card-hover">
+                <p class="text-slate-500 text-[8px] font-bold uppercase tracking-widest mb-1 italic">Liquid Cash</p>
+                <div class="flex flex-wrap items-baseline gap-2 mt-1">
+                    <h3 id="liquid-cash" class="text-xl lg:text-2xl font-black text-blue-400 italic">Rp 0</h3>
+                    <span id="mom-liquid-velocity"></span>
+                </div>
+            </div>
+            <div class="bg-slate-800/60 p-6 rounded-[2rem] border border-slate-800 shadow-lg card-hover">
                 <p class="text-slate-500 text-[8px] font-bold uppercase tracking-widest mb-1 italic">Monthly Cashflow</p>
                 <h3 id="cashflow" class="text-xl lg:text-2xl font-black italic">Rp 0</h3>
             </div>
-            <div class="bg-slate-800/60 p-6 rounded-[2rem] border border-slate-800 shadow-lg">
+            <div class="bg-slate-800/60 p-6 rounded-[2rem] border border-slate-800 shadow-lg card-hover">
                 <p class="text-slate-500 text-[8px] font-bold uppercase tracking-widest mb-1 italic">Reserved Fund</p>
                 <div class="flex flex-wrap items-baseline gap-2 mt-1">
-                <h3 id="emergency-fund" class="text-xl lg:text-2xl font-black text-orange-500 italic">Rp 0</h3>
-                <span id="mom-emergency-velocity"></span>
+                    <h3 id="emergency-fund" class="text-xl lg:text-2xl font-black text-orange-500 italic">Rp 0</h3>
+                    <span id="mom-emergency-velocity"></span>
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10 stagger">
             <div class="lg:col-span-2 bg-slate-800/40 p-6 lg:p-10 rounded-[3rem] border border-slate-800 shadow-2xl">
                 <p class="text-slate-400 font-bold italic uppercase tracking-[0.2em] text-[10px] mb-8">Income Breakdown (%)</p>
                 <div class="w-full flex-1 relative min-h-[300px]">
@@ -140,33 +117,27 @@
                 <div id="allocation-list" class="space-y-8"></div>
             </div>
         </div>
-        
-        <div id="all-time-insight" class="text-sm text-slate-200 font-serif leading-relaxed italic"></div>
+
+        <div id="all-time-insight" class="text-sm text-slate-200 font-serif leading-relaxed italic pb-10"></div>
     </main>
 
-    <nav class="fixed bottom-0 w-full bg-[#0d1117]/95 backdrop-blur-md border-t border-slate-800 px-1 py-3 lg:hidden z-50">
-        <div class="flex justify-between items-center px-2">
-            <a href="index.html" class="flex flex-col items-center w-1/5 text-slate-500 hover:text-blue-400 transition-all">
-                <span class="text-lg opacity-70">📊</span>
-                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">Dasbor</span>
-            </a>
-            <a href="transaksi.html" class="flex flex-col items-center w-1/5 text-blue-400"> <span class="text-lg">💸</span>
-                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">Transaksi</span>
-            </a>
-            <a href="aset.html" class="flex flex-col items-center w-1/5 text-slate-500 hover:text-blue-400 transition-all">
-                <span class="text-lg opacity-70">💎</span>
-                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">Aset</span>
-            </a>
-            <a href="history.html" class="flex flex-col items-center w-1/5 text-slate-500 hover:text-blue-400 transition-all">
-                <span class="text-lg opacity-70">📜</span>
-                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">History</span>
-            </a>
-            <button onclick="openLogoutModal()" class="flex flex-col items-center w-1/5 text-red-900/70 hover:text-red-500 transition-all active:scale-90">
-                <svg class="w-5 h-5 mb-[2px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                <span class="text-[8px] font-bold uppercase tracking-widest">Keluar</span>
-            </button>
+    <!-- ═══════════════════════════════════════ -->
+    <!-- MOBILE NAV                               -->
+    <!-- ═══════════════════════════════════════ -->
+    <nav class="fixed bottom-0 w-full bg-[#0d1117]/95 backdrop-blur-md border-t border-slate-800 px-1 py-2 lg:hidden z-50">
+        <div class="flex justify-around items-center">
+            <a href="index.html" class="flex flex-col items-center flex-1 text-blue-400"><span class="text-base">📊</span><span class="text-[7px] font-bold mt-0.5 uppercase">Dasbor</span></a>
+            <a href="transaksi.html" class="flex flex-col items-center flex-1 text-slate-500 hover:text-blue-400 transition-all"><span class="text-base opacity-70">💸</span><span class="text-[7px] font-bold mt-0.5 uppercase">Transaksi</span></a>
+            <a href="aset.html" class="flex flex-col items-center flex-1 text-slate-500 hover:text-blue-400 transition-all"><span class="text-base opacity-70">💎</span><span class="text-[7px] font-bold mt-0.5 uppercase">Aset</span></a>
+            <a href="history.html" class="flex flex-col items-center flex-1 text-slate-500 hover:text-blue-400 transition-all"><span class="text-base opacity-70">📜</span><span class="text-[7px] font-bold mt-0.5 uppercase">History</span></a>
+            <a href="ai.html" class="flex flex-col items-center flex-1 text-slate-500 hover:text-blue-400 transition-all"><span class="text-base opacity-70">🤖</span><span class="text-[7px] font-bold mt-0.5 uppercase">AI</span></a>
+            <button onclick="openLogoutModal()" class="flex flex-col items-center flex-1 text-red-900/70 hover:text-red-500 transition-all active:scale-90"><svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg><span class="text-[7px] font-bold uppercase">Keluar</span></button>
         </div>
     </nav>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- LOGOUT MODAL                             -->
+    <!-- ═══════════════════════════════════════ -->
     <div id="logout-modal" class="fixed inset-0 bg-[#0d1117]/90 backdrop-blur-sm z-[99999] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-xs shadow-2xl transform scale-95 transition-transform duration-300" id="logout-modal-content">
             <div class="flex flex-col items-center text-center">
@@ -183,15 +154,18 @@
         </div>
     </div>
 
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SCRIPTS                                  -->
+    <!-- ═══════════════════════════════════════ -->
     <script>
+        // ── CLOCK & AUTH ──
         function startClock() {
             const display = document.getElementById('current-date-display');
+            if (!display) return;
             setInterval(() => {
                 const now = new Date();
                 const options = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
-                const dateStr = now.toLocaleDateString('id-ID', options).toUpperCase();
-                const timeStr = now.toLocaleTimeString('en-GB', { hour12: false });
-                display.innerText = `${dateStr} // ${timeStr}`;
+                display.innerText = `${now.toLocaleDateString('id-ID', options).toUpperCase()} // ${now.toLocaleTimeString('en-GB', { hour12: false })}`;
             }, 1000);
         }
 
@@ -201,42 +175,158 @@
                 const user = await window.getCurrentUser();
                 if (!user) { window.location.href = 'login.html'; return; }
                 await window.renderDashboardLogic();
+                // Load AI data setelah dashboard render
+                setTimeout(loadAIData, 1500);
             } catch (err) { console.warn("Database sync deferred:", err.message); }
-        
         }
 
-       // --- LOGIKA MODAL LOGOUT UDAH DIGABUNG DI SINI ---
+        // ── LOGOUT MODAL ──
         function openLogoutModal() {
             const modal = document.getElementById('logout-modal');
             const content = document.getElementById('logout-modal-content');
             modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                content.classList.remove('scale-95');
-            }, 10);
+            setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10);
         }
-
         function closeLogoutModal() {
             const modal = document.getElementById('logout-modal');
             const content = document.getElementById('logout-modal-content');
-            modal.classList.add('opacity-0');
-            content.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
         }
-
         async function executeRealLogout() {
-            try {
-                await window.logoutUser(); 
-                window.location.href = 'login.html';
-            } catch (error) {
-                console.error("Gagal keluar:", error);
-                alert("Terjadi kesalahan saat logout. Coba lagi.");
-            }
+            try { await window.logoutUser(); window.location.href = 'login.html'; }
+            catch (e) { alert("Gagal logout, coba lagi."); }
         }
 
         window.onload = securityCheck;
+    </script>
+
+    <script>
+        // ══════════════════════════════════════════════
+        // AI CONVERSATIONAL AGENT v1.0
+        // ══════════════════════════════════════════════
+        const EDGE_URL = 'https://cxryyztccnyhszkeetmx.supabase.co/functions/v1/ai-analyst';
+        let chatHistory = [];
+        let aiFinancialData = null;
+        let aiTradingData = null;
+
+        async function loadAIData() {
+            try {
+                const transactions = await window.getTransactions();
+                const { data: trades } = await window._supabase
+                    .from('trading_journal')
+                    .select('*')
+                    .order('entry_time', { ascending: false })
+                    .limit(100);
+
+                const summary = {
+                    netWorth: document.getElementById('net-worth')?.innerText || '0',
+                    liquidCash: document.getElementById('liquid-cash')?.innerText || '0',
+                    reservedFund: document.getElementById('emergency-fund')?.innerText || '0',
+                    cashflow: document.getElementById('cashflow')?.innerText || '0'
+                };
+
+                aiFinancialData = { transactions: transactions || [], summary };
+                aiTradingData = trades || [];
+                console.log('✅ AI Data ready:', transactions?.length, 'tx,', trades?.length, 'trades');
+            } catch (err) {
+                console.error('AI Data load failed:', err);
+            }
+        }
+
+        function addMessage(text, isUser = false, isLoading = false) {
+            const messages = document.getElementById('chat-messages');
+            const id = 'msg-' + Date.now();
+            const html = isUser
+                ? `<div class="flex gap-2 justify-end" id="${id}">
+                    <div class="bg-blue-600/30 border border-blue-500/20 rounded-xl rounded-tr-none px-3 py-2 max-w-[85%]">
+                        <p class="text-[10px] text-blue-100 leading-relaxed">${text}</p>
+                    </div>
+                    <div class="w-5 h-5 rounded-full bg-slate-700 flex items-center justify-center flex-shrink-0 text-[9px]">👤</div>
+                   </div>`
+                : `<div class="flex gap-2" id="${id}">
+                    <div class="w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0 text-[9px]">🤖</div>
+                    <div class="bg-slate-800/60 rounded-xl rounded-tl-none px-3 py-2 max-w-[85%]">
+                        ${isLoading
+                            ? `<div class="flex gap-1 items-center py-1">
+                                <div class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" style="animation-delay:0s"></div>
+                                <div class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" style="animation-delay:0.15s"></div>
+                                <div class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" style="animation-delay:0.3s"></div>
+                               </div>`
+                            : `<p class="text-[10px] text-slate-300 leading-relaxed whitespace-pre-wrap">${text}</p>`}
+                    </div>
+                   </div>`;
+            messages.insertAdjacentHTML('beforeend', html);
+            messages.scrollTop = messages.scrollHeight;
+            return id;
+        }
+
+        function updateMessage(id, text) {
+            const el = document.getElementById(id);
+            if (el) el.querySelector('div:last-child').innerHTML = `<p class="text-[10px] text-slate-300 leading-relaxed whitespace-pre-wrap">${text}</p>`;
+            document.getElementById('chat-messages').scrollTop = 99999;
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const btn = document.getElementById('chat-send-btn');
+            const question = input.value.trim();
+            if (!question || btn.disabled) return;
+
+            input.value = '';
+            btn.disabled = true;
+            addMessage(question, true);
+            const loadingId = addMessage('', false, true);
+            chatHistory.push({ role: 'user', content: question });
+
+            try {
+                const txList = (aiFinancialData?.transactions || []).slice(0, 50)
+                    .map(t => `[${t.tanggal}] ${t.kategori}|${t.jenis}|Rp${Number(t.nominal).toLocaleString('id-ID')}|${t.keterangan}`)
+                    .join('\n');
+
+                const tradeList = (aiTradingData || []).slice(0, 30)
+                    .map(t => `[${t.entry_time?.split(' ')[0]}] ${t.pair}|${t.setup_id}|$${Number(t.profit_loss || 0).toFixed(2)}|${t.mindset || '-'}`)
+                    .join('\n');
+
+                const wins = (aiTradingData || []).filter(t => parseFloat(t.profit_loss) > 0).length;
+                const total = (aiTradingData || []).length;
+                const totalPL = (aiTradingData || []).reduce((s, t) => s + parseFloat(t.profit_loss || 0), 0);
+
+                const res = await fetch(EDGE_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'chat',
+                        data: {
+                            question,
+                            chatHistory: chatHistory.slice(-6),
+                            financialSummary: aiFinancialData?.summary,
+                            recentTransactions: txList,
+                            tradingStats: { total, winRate: total > 0 ? ((wins/total)*100).toFixed(1) : 0, totalPL: totalPL.toFixed(2) },
+                            recentTrades: tradeList
+                        }
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    updateMessage(loadingId, data.insight);
+                    chatHistory.push({ role: 'assistant', content: data.insight });
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+            } catch (err) {
+                updateMessage(loadingId, '⚠️ Error: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                input.focus();
+            }
+        }
+
+        function sendQuickQuestion(q) {
+            document.getElementById('chat-input').value = q;
+            sendChatMessage();
+        }
     </script>
 </body>
 </html>
