@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Advisor | Asset Tracker Pro</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d1117">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="gambar1.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+    <style>
+        #chat-body::-webkit-scrollbar { width: 3px; }
+        #chat-body::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-6px); }
+        }
+        .typing-dot { animation: typingBounce 1.2s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes msgIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .msg-animate { animation: msgIn 0.3s ease forwards; }
+        .chip:hover { transform: translateY(-1px); }
+        .chip:active { transform: scale(0.97); }
+        .chip { transition: all 0.2s ease; }
+    </style>
+</head>
+
+<body class="bg-[#0d1117] text-slate-100 font-sans flex flex-col lg:flex-row h-screen overflow-hidden">
+
+    <!-- SIDEBAR DESKTOP -->
+    <aside class="hidden lg:flex flex-col w-64 bg-[#0d1117] border-r border-slate-800 z-50" style="height:100vh;">
+        <div class="flex flex-col items-center gap-1 border-b border-slate-800 py-4 flex-shrink-0">
+            <img src="gambar1.png" alt="" class="w-12 h-12 rounded-2xl border border-slate-700 shadow-lg">
+            <span class="text-[9px] font-black tracking-[0.3em] text-blue-500 uppercase italic">Asset Tracker</span>
+        </div>
+        <nav class="flex flex-col flex-1 px-3 py-3 gap-1">
+            <p class="text-[8px] text-slate-500 font-bold px-2 tracking-widest uppercase mb-1">Main</p>
+            <a href="index.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">📊</span><span class="ml-2">Dashboard</span></a>
+            <a href="transaksi.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">💸</span><span class="ml-2">Transactions</span></a>
+            <a href="aset.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">💎</span><span class="ml-2">Assets</span></a>
+            <p class="text-[8px] text-slate-500 font-bold px-2 tracking-widest uppercase mb-1 mt-2">Reports</p>
+            <a href="history.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">📜</span><span class="ml-2">History</span></a>
+            <a href="bulanan.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">📅</span><span class="ml-2">Monthly</span></a>
+            <a href="tahunan.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">📈</span><span class="ml-2">Yearly</span></a>
+            <p class="text-[8px] text-slate-500 font-bold px-2 tracking-widest uppercase mb-1 mt-2">Intelligence</p>
+            <a href="ai.html" class="flex items-center px-3 py-2 bg-slate-800/50 border-r-2 border-blue-500 text-blue-400 font-bold text-[10px] uppercase tracking-widest rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">🤖</span><span class="ml-2">AI Advisor</span></a>
+            <div class="flex-1"></div>
+            <div class="border-t border-slate-800 pt-3 flex-shrink-0">
+                <button onclick="openLogoutModal()" class="w-full py-2.5 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">Exit System</button>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- MAIN CHAT -->
+    <main class="flex-1 flex flex-col min-h-0 bg-[#0d1117]">
+
+        <!-- Header -->
+        <header class="flex-shrink-0 flex items-center justify-between px-5 py-4 border-b border-slate-800">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-xl">🤖</div>
+                <div>
+                    <h1 class="text-sm font-black text-white uppercase italic tracking-widest">AI Financial Advisor</h1>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                        <p id="ai-status" class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Memuat data...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="hidden sm:flex items-center gap-3 mr-2">
+                    <div class="text-center">
+                        <p class="text-[7px] text-slate-600 uppercase font-bold">Transaksi</p>
+                        <p id="ctx-tx" class="text-[9px] font-black text-blue-400">—</p>
+                    </div>
+                    <div class="w-px h-6 bg-slate-800"></div>
+                    <div class="text-center">
+                        <p class="text-[7px] text-slate-600 uppercase font-bold">Trades</p>
+                        <p id="ctx-trades" class="text-[9px] font-black text-blue-400">—</p>
+                    </div>
+                </div>
+                <button onclick="clearChat()" class="px-3 py-1.5 bg-slate-800/60 border border-slate-700 hover:border-slate-600 rounded-lg text-[9px] font-bold text-slate-500 hover:text-slate-300 uppercase transition-all">Clear</button>
+                <button onclick="openLogoutModal()" title="openLogoutModallass="lg:hidden p-2 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Chat Body -->
+        <div id="chat-body" class="flex-1 overflow-y-auto px-4 lg:px-8 py-6 min-h-0 pb-32 lg:pb-6">
+            <div class="max-w-2xl mx-auto space-y-5">
+
+                <!-- Welcome Card -->
+                <div class="msg-animate bg-slate-800/40 border border-blue-500/15 rounded-3xl p-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-xl flex-shrink-0">🤖</div>
+                        <div>
+                            <p class="text-xs font-black text-white italic uppercase tracking-widest mb-2">AI Financial Advisor — Phase 1 Ecosystem</p>
+                            <p class="text-[11px] text-slate-300 leading-relaxed">Halo! Gw AI Advisor lo dengan akses ke <strong class="text-blue-400">data keuangan</strong> dan <strong class="text-blue-400">jurnal trading</strong> lo secara real-time. Tanya apa aja — kondisi finansial, performa trading, atau rekomendasi spesifik.</p>
+                        </div>
+                    </div>
+                    <div class="mt-5 pt-4 border-t border-slate-700/50">
+                        <p class="text-[8px] text-slate-600 font-bold uppercase tracking-widest mb-3">Coba tanya:</p>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="askQuestion('Bagaimana kondisi keuangan gw secara keseluruhan sekarang?')" class="chip px-3 py-1.5 bg-slate-900/80 border border-slate-700 hover:border-blue-500/50 hover:bg-blue-600/10 rounded-xl text-[9px] font-bold text-slate-400 hover:text-blue-400">💰 Kondisi keuangan</button>
+                            <button onclick="askQuestion('Performa trading gw bulan ini gimana? Berapa trade dan total P&L?')" class="chip px-3 py-1.5 bg-slate-900/80 border border-slate-700 hover:border-blue-500/50 hover:bg-blue-600/10 rounded-xl text-[9px] font-bold text-slate-400 hover:text-blue-400">📈 Performa trading</button>
+                            <button onclick="askQuestion('Pengeluaran terbesar gw di kategori apa? Sudah efisien?')" class="chip px-3 py-1.5 bg-slate-900/80 border border-slate-700 hover:border-blue-500/50 hover:bg-blue-600/10 rounded-xl text-[9px] font-bold text-slate-400 hover:text-blue-400">💸 Analisis pengeluaran</button>
+                            <button onclick="askQuestion('Apa 3 rekomendasi konkret untuk improve keuangan dan trading gw?')" class="chip px-3 py-1.5 bg-slate-900/80 border border-slate-700 hover:border-blue-500/50 hover:bg-blue-600/10 rounded-xl text-[9px] font-bold text-slate-400 hover:text-blue-400">🎯 Rekomendasi</button>
+                            <button onclick="askQuestion('Dana darurat gw sudah cukup belum untuk kondisi darurat?')" class="chip px-3 py-1.5 bg-slate-900/80 border border-slate-700 hover:border-blue-500/50 hover:bg-blue-600/10 rounded-xl text-[9px] font-bold text-slate-400 hover:text-blue-400">🛡️ Dana darurat</button>
+                            <button onclick="askQuestion('Setup trading mana yang paling profitable untuk gw selama ini?')" class="chip px-3 py-1.5 bg-slate-900/80 border border-slate-700 hover:border-blue-500/50 hover:bg-blue-600/10 rounded-xl text-[9px] font-bold text-slate-400 hover:text-blue-400">🎰 Best setup</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <div id="messages-container" class="space-y-4"></div>
+            </div>
+        </div>
+
+        <!-- Input -->
+        <div class="flex-shrink-0 border-t border-slate-800 bg-[#0d1117] px-4 lg:px-8 py-4">
+            <div class="max-w-2xl mx-auto">
+                <div class="flex gap-3 items-end">
+                    <div class="flex-1 bg-slate-800/60 border border-slate-700 rounded-2xl px-4 py-3 focus-within:border-blue-500 transition-all">
+                        <textarea id="chat-input" placeholder="Tanya apa aja tentang keuangan & trading lo..." rows="1"
+                            class="w-full bg-transparent text-[11px] text-white placeholder-slate-600 outline-none resize-none leading-relaxed"
+                            onkeydown="handleKeydown(event)" oninput="autoResize(this)"></textarea>
+                    </div>
+                    <button onclick="sendMessage()" title="sendMessage" id="send-btn"
+                        class="w-11 h-11 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 rounded-2xl flex items-center justify-center transition-all flex-shrink-0 shadow-lg shadow-blue-900/30">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                    </button>
+                </div>
+                <p class="text-[8px] text-slate-700 text-center mt-2 uppercase tracking-widest">Enter kirim · Shift+Enter baris baru · Powered by OpenRouter</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- MOBILE NAV -->
+    <nav class="fixed bottom-0 w-full bg-[#0d1117]/95 backdrop-blur-md border-t border-slate-800 px-1 py-2 lg:hidden z-50">
+        <div class="flex justify-around items-center">
+            <a href="index.html" class="flex flex-col items-center flex-1 text-slate-500 hover:text-blue-400 transition-all"><span class="text-base opacity-70">📊</span><span class="text-[7px] font-bold mt-0.5 uppercase">Dasbor</span></a>
+            <a href="transaksi.html" class="flex flex-col items-center flex-1 text-slate-500 hover:text-blue-400 transition-all"><span class="text-base opacity-70">💸</span><span class="text-[7px] font-bold mt-0.5 uppercase">Transaksi</span></a>
+            <a href="aset.html" class="flex flex-col items-center flex-1 text-slate-500 hover:text-blue-400 transition-all"><span class="text-base opacity-70">💎</span><span class="text-[7px] font-bold mt-0.5 uppercase">Aset</span></a>
+            <a href="history.html" class="flex flex-col items-center flex-1 text-slate-500 hover:text-blue-400 transition-all"><span class="text-base opacity-70">📜</span><span class="text-[7px] font-bold mt-0.5 uppercase">History</span></a>
+            <a href="ai.html" class="flex flex-col items-center flex-1 text-blue-400"><span class="text-base">🤖</span><span class="text-[7px] font-bold mt-0.5 uppercase">AI</span></a>
+            <button onclick="openLogoutModal()" class="flex flex-col items-center flex-1 text-red-900/70 hover:text-red-500 transition-all active:scale-90"><svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg><span class="text-[7px] font-bold uppercase">Keluar</span></button>
+        </div>
+    </nav>
+
+    <!-- LOGOUT MODAL -->
+    <div id="logout-modal" class="fixed inset-0 bg-[#0d1117]/90 backdrop-blur-sm z-[99999] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div id="logout-modal-content" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-xs shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="flex flex-col items-center text-center">
+                <div class="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mb-4 border border-red-500/20">
+                    <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+                <h3 class="text-white font-black text-base italic uppercase tracking-widest mb-1">System Exit</h3>
+                <p class="text-slate-400 text-[10px] font-medium mb-6 uppercase tracking-wider">Putuskan koneksi dari server?</p>
+                <div class="flex gap-3 w-full">
+                    <button onclick="closeLogoutModal()" class="flex-1 py-3 rounded-xl border border-slate-700 text-slate-300 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all">Batal</button>
+                    <button onclick="executeLogout()" class="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-red-900/50 transition-all">Keluar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const EDGE_URL = 'https://cxryyztccnyhszkeetmx.supabase.co/functions/v1/ai-analyst';
+        let chatHistory = [];
+        let aiData = { transactions: [], trades: [], summary: {} };
+        let dataReady = false;
+
+        async function init() {
+            try {
+                const user = await window.getCurrentUser();
+                if (!user) { window.location.href = 'login.html'; return; }
+                await loadData();
+            } catch (e) { window.location.href = 'login.html'; }
+        }
+
+        async function loadData() {
+            setStatus('Memuat data keuangan & trading...');
+            try {
+                const transactions = await window.getTransactions();
+                const summary = window.calculateAssetSummary(transactions);
+                const { data: trades } = await window._supabase
+                    .from('trading_journal').select('*')
+                    .order('entry_time', { ascending: false }).limit(200);
+
+                aiData = {
+                    transactions: transactions || [],
+                    trades: trades || [],
+                    summary: {
+                        netWorth: window.formatIDR(summary.netWorth),
+                        liquidCash: window.formatIDR(summary.liquidCash),
+                        reservedFund: window.formatIDR(summary.reservedFund),
+                        totalInflow: window.formatIDR(summary.totalInflow),
+                        totalOutflow: window.formatIDR(summary.totalOutflow),
+                        assetBase: window.formatIDR(summary.assetBase),
+                    }
+                };
+
+                dataReady = true;
+                const txCount = transactions?.length || 0;
+                const tradeCount = trades?.length || 0;
+                setStatus('Online · ' + txCount + ' transaksi & ' + tradeCount + ' trades tersedia');
+                document.getElementById('ctx-tx').innerText = txCount + ' data';
+                document.getElementById('ctx-trades').innerText = tradeCount + ' data';
+            } catch (err) {
+                setStatus('⚠️ Gagal memuat: ' + err.message);
+            }
+        }
+
+        function setStatus(msg) {
+            const el = document.getElementById('ai-status');
+            if (el) el.innerText = msg;
+        }
+
+        function renderMessage(text, isUser, isLoading = false) {
+            const container = document.getElementById('messages-container');
+            const id = 'msg-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+            const el = document.createElement('div');
+            el.id = id;
+            el.className = 'msg-animate flex gap-3' + (isUser ? ' justify-end' : '');
+
+            if (isUser) {
+                el.innerHTML = `
+                    <div class="max-w-[80%] bg-blue-600/25 border border-blue-500/20 rounded-2xl rounded-tr-none px-4 py-3">
+                        <p class="text-[11px] text-blue-100 leading-relaxed">${safe(text)}</p>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-slate-700 border border-slate-600 flex items-center justify-center flex-shrink-0">👤</div>`;
+            } else {
+                el.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">🤖</div>
+                    <div class="max-w-[80%] bg-slate-800/60 border border-slate-700/50 rounded-2xl rounded-tl-none px-4 py-3" id="bubble-${id}">
+                        ${isLoading
+                            ? `<div class="flex gap-1.5 items-center py-1">
+                                <div class="w-2 h-2 bg-blue-400 rounded-full typing-dot"></div>
+                                <div class="w-2 h-2 bg-blue-400 rounded-full typing-dot"></div>
+                                <div class="w-2 h-2 bg-blue-400 rounded-full typing-dot"></div>
+                               </div>`
+                            : `<p class="text-[11px] text-slate-200 leading-relaxed whitespace-pre-wrap">${fmt(text)}</p>`}
+                    </div>`;
+            }
+            container.appendChild(el);
+            scrollBottom();
+            return id;
+        }
+
+        function updateMessage(id, text) {
+            const b = document.getElementById('bubble-' + id);
+            if (b) b.innerHTML = `<p class="text-[11px] text-slate-200 leading-relaxed whitespace-pre-wrap">${fmt(text)}</p>`;
+            scrollBottom();
+        }
+
+        function scrollBottom() {
+            const b = document.getElementById('chat-body');
+            b.scrollTop = b.scrollHeight;
+        }
+
+        // Escape HTML & format bold
+        function safe(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+        function fmt(s) { return safe(s).replace(/\*\*(.*?)\*\*/g,'<strong class="text-white font-black">$1</strong>'); }
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const btn = document.getElementById('send-btn');
+            const q = input.value.trim();
+            if (!q || btn.disabled) return;
+
+            input.value = '';
+            autoResize(input);
+            btn.disabled = true;
+            renderMessage(q, true);
+            const lid = renderMessage('', false, true);
+            chatHistory.push({ role: 'user', content: q });
+
+            try {
+                if (!dataReady) await loadData();
+
+                const txList = aiData.transactions.slice(0, 50)
+                    .map(t => `[${t.date}] ${t.kategori}|${t.type}|Rp${Number(t.amount||0).toLocaleString('id-ID')}|${t.note}`)
+                    .join('\n');
+
+                const tradeList = aiData.trades.slice(0, 50)
+                    .map(t => `[${t.entry_time?.split(' ')[0]}] ${t.pair}|${t.type}|$${Number(t.profit_loss||0).toFixed(2)}|entry:${t.entry_price} close:${t.close_price}`)
+                    .join('\n');
+
+                const wins = aiData.trades.filter(t => parseFloat(t.profit_loss) > 0).length;
+                const total = aiData.trades.length;
+                const totalPL = aiData.trades.reduce((s, t) => s + parseFloat(t.profit_loss || 0), 0);
+
+                // Ambil JWT token untuk security
+                const { data: { session } } = await window._supabase.auth.getSession();
+                const authToken = session?.access_token || '';
+
+                const res = await fetch(EDGE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        type: 'chat',
+                        data: {
+                            question: q,
+                            chatHistory: chatHistory.slice(-8),
+                            financialSummary: aiData.summary,
+                            recentTransactions: txList,
+                            tradingStats: {
+                                total,
+                                winRate: total > 0 ? ((wins/total)*100).toFixed(1) : 0,
+                                totalPL: totalPL.toFixed(2),
+                                avgPL: total > 0 ? (totalPL/total).toFixed(2) : 0
+                            },
+                            recentTrades: tradeList
+                        }
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    updateMessage(lid, data.insight);
+                    chatHistory.push({ role: 'assistant', content: data.insight });
+                } else {
+                    throw new Error(data.error || 'Server error');
+                }
+            } catch (err) {
+                updateMessage(lid, '⚠️ Error: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                input.focus();
+            }
+        }
+
+        function askQuestion(q) {
+            document.getElementById('chat-input').value = q;
+            sendMessage();
+        }
+
+        function clearChat() {
+            document.getElementById('messages-container').innerHTML = '';
+            chatHistory = [];
+        }
+
+        function handleKeydown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+        }
+
+        function autoResize(el) {
+            el.style.height = 'auto';
+            el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+        }
+
+        function openLogoutModal() {
+            const m = document.getElementById('logout-modal');
+            const c = document.getElementById('logout-modal-content');
+            m.classList.remove('hidden');
+            setTimeout(() => { m.classList.remove('opacity-0'); c.classList.remove('scale-95'); }, 10);
+        }
+        function closeLogoutModal() {
+            const m = document.getElementById('logout-modal');
+            const c = document.getElementById('logout-modal-content');
+            m.classList.add('opacity-0'); c.classList.add('scale-95');
+            setTimeout(() => m.classList.add('hidden'), 300);
+        }
+        async function executeLogout() {
+            await window.logoutUser();
+            window.location.href = 'login.html';
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

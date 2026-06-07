@@ -2,98 +2,54 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Aset | Asset Tracker Pro</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0d1117">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#3b82f6">
     <link rel="apple-touch-icon" href="gambar1.png">
     
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="db.js"></script>
     <script src="app.js"></script>
-    <style>
-        /* BACKGROUND DISATUKAN DENGAN WARNA SIDEBAR (#0d1117) */
-        html, body { background-color: #0d1117 !important; margin: 0; padding: 0; }
-        
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-        
-        /* Tambahan buat hide scrollbar tabs mobile nanti */
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
 </head>
 
 <body class="bg-[#0d1117] text-slate-100 font-sans flex flex-col lg:flex-row h-screen overflow-hidden">
 
-    <aside class="hidden lg:flex flex-col w-64 bg-[#0d1117] border-r border-slate-800 z-50">
-        <div class="p-6 flex flex-col items-center gap-3 border-b border-slate-800">
-            <img src="gambar1.png" alt="" class="w-16 h-16 rounded-2xl border border-slate-700 mb-2 shadow-lg">
-            <span class="text-[10px] font-black tracking-[0.3em] text-blue-500 uppercase italic">Asset Tracker</span>
+    <aside class="hidden lg:flex flex-col w-64 bg-[#0d1117] border-r border-slate-800 z-50" style="height:100vh;">
+        <div class="flex flex-col items-center gap-1 border-b border-slate-800 py-4 flex-shrink-0">
+            <img src="gambar1.png" alt="" class="w-12 h-12 rounded-2xl border border-slate-700 shadow-lg">
+            <span class="text-[9px] font-black tracking-[0.3em] text-blue-500 uppercase italic">Asset Tracker</span>
         </div>
-
-        <nav class="flex-1 flex flex-col justify-start mt-6 overflow-y-auto">
-            <div>
-                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase">Main</p>
-                <ul class="space-y-1 px-3">
-                    <li>
-                        <a href="index.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
-                            <span class="w-6 text-center">📊</span> <span class="ml-2">Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="transaksi.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
-                            <span class="w-6 text-center">💸</span> <span class="ml-2">Transactions</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="aset.html" class="flex items-center px-4 py-2.5 bg-slate-800/50 border-r-2 border-blue-500 text-blue-400 font-bold text-xs uppercase tracking-widest rounded-lg">
-                            <span class="w-6 text-center">💎</span> <span class="ml-2">Assets</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            
-            <div class="mt-6">
-                <p class="text-[10px] text-slate-500 font-bold mb-3 px-6 tracking-widest uppercase">Reports</p>
-                <ul class="space-y-1 px-3">
-                    <li>
-                        <a href="history.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
-                            <span class="w-6 text-center">📜</span> <span class="ml-2">History</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="bulanan.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
-                            <span class="w-6 text-center">📅</span> <span class="ml-2">Monthly</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="tahunan.html" class="flex items-center px-4 py-2.5 text-slate-400 hover:bg-slate-800/30 text-xs uppercase tracking-widest transition-all rounded-lg">
-                            <span class="w-6 text-center">📈</span> <span class="ml-2">Yearly</span>
-                        </a>
-                    </li>
-                </ul>
+        <nav class="flex flex-col flex-1 px-3 py-3 gap-1">
+            <p class="text-[8px] text-slate-500 font-bold px-2 tracking-widest uppercase mb-1">Main</p>
+            <a href="index.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">📊</span><span class="ml-2">Dashboard</span></a>
+            <a href="transaksi.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">💸</span><span class="ml-2">Transactions</span></a>
+            <a href="aset.html" class="flex items-center px-3 py-2 bg-slate-800/50 border-r-2 border-blue-500 text-blue-400 font-bold text-[10px] uppercase tracking-widest rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">💎</span><span class="ml-2">Assets</span></a>
+            <p class="text-[8px] text-slate-500 font-bold px-2 tracking-widest uppercase mb-1 mt-2">Reports</p>
+            <a href="history.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">📜</span><span class="ml-2">History</span></a>
+            <a href="bulanan.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">📅</span><span class="ml-2">Monthly</span></a>
+            <a href="tahunan.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">📈</span><span class="ml-2">Yearly</span></a>
+            <p class="text-[8px] text-slate-500 font-bold px-2 tracking-widest uppercase mb-1 mt-2">Intelligence</p>
+            <a href="ai.html" class="flex items-center px-3 py-2 text-slate-400 hover:bg-slate-800/30 text-[10px] uppercase tracking-widest transition-all rounded-lg flex-shrink-0"><span class="w-5 text-center text-xs">🤖</span><span class="ml-2">AI Advisor</span></a>
+            <div class="flex-1"></div>
+            <div class="border-t border-slate-800 pt-3 flex-shrink-0">
+                <button onclick="openLogoutModal()" class="w-full py-2.5 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">Exit System</button>
             </div>
         </nav>
-
-        <div class="p-6 border-t border-slate-800">
-            <button onclick="openLogoutModal()" class="w-full py-3 bg-red-900/20 border border-red-500/30 text-red-500 rounded-xl text-[9px] font-black uppercase italic hover:bg-red-500 hover:text-white transition-all">
-                Exit System
-            </button>
-        </div>
     </aside>
 
-    <main class="flex-1 overflow-y-auto p-6 pb-36 lg:p-10 lg:pb-10 bg-[#0d1117]">
+    <main class="animate-fade-in flex-1 overflow-y-auto p-6 lg:p-10 bg-[#0d1117]">
         <header class="mb-10 flex justify-between items-start gap-4">
             <div>
                 <h1 class="text-2xl lg:text-4xl font-black italic uppercase tracking-tight text-white leading-none">Brankas Aset</h1>
                 <p class="text-[9px] md:text-[10px] text-blue-500 font-bold uppercase tracking-[0.3em] mt-2 italic">Encrypted Portfolio</p>
                 <p id="current-date-display" class="text-[9px] md:text-[10px] text-blue-400 font-bold uppercase tracking-[0.4em] mt-2 italic">Syncing Time...</p>
             </div>
+            <button onclick="handleLogout()" class="lg:hidden p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl hover:bg-red-500 transition-all active:scale-90">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            </button>
         </header>
 
         <div class="mb-8 p-6 md:p-8 bg-gradient-to-br from-blue-600 to-blue-900 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
@@ -107,7 +63,7 @@
             <div class="absolute -right-6 -bottom-6 text-7xl md:text-9xl opacity-10 italic font-black text-white uppercase select-none">Asset</div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 pb-10">
             <div class="bg-slate-800/40 p-6 md:p-8 rounded-[2.5rem] border border-slate-800 shadow-xl">
                 <div class="flex justify-between items-start mb-6 md:mb-8">
                     <div>
@@ -140,31 +96,18 @@
         </div>
     </main>
 
-    <nav class="fixed bottom-0 w-full bg-[#0d1117]/95 backdrop-blur-md border-t border-slate-800 px-1 py-3 lg:hidden z-50">
-        <div class="flex justify-between items-center px-2">
-            <a href="index.html" class="flex flex-col items-center w-1/5 text-slate-500 hover:text-blue-400 transition-all">
-                <span class="text-lg opacity-70">📊</span>
-                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">Dasbor</span>
-            </a>
-            <a href="transaksi.html" class="flex flex-col items-center w-1/5 text-slate-500 hover:text-blue-400 transition-all">
-                <span class="text-lg opacity-70">💸</span>
-                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">Transaksi</span>
-            </a>
-            <a href="aset.html" class="flex flex-col items-center w-1/5 text-blue-400">
-                <span class="text-lg">💎</span>
-                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">Aset</span>
-            </a>
-            <a href="history.html" class="flex flex-col items-center w-1/5 text-slate-500 hover:text-blue-400 transition-all">
-                <span class="text-lg opacity-70">📜</span>
-                <span class="text-[8px] font-bold mt-1 uppercase tracking-widest">History</span>
-            </a>
-            <button onclick="openLogoutModal()" class="flex flex-col items-center w-1/5 text-red-900/70 hover:text-red-500 transition-all active:scale-90">
-                <svg class="w-5 h-5 mb-[2px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                <span class="text-[8px] font-bold uppercase tracking-widest">Keluar</span>
-            </button>
+    <nav class="fixed bottom-0 w-full bg-[#0d1117]/95 backdrop-blur-md border-t border-slate-800 px-1 py-2 lg:hidden z-50">
+        <div class="flex justify-around items-center">
+            <a href="index.html" class="flex flex-col items-center flex-1 text-slate-500 hover:text-blue-400 transition-all"><span class="text-base opacity-70">📊</span><span class="text-[7px] font-bold mt-0.5 uppercase">Dasbor</span></a>
+            <a href="transaksi.html" class="flex flex-col items-center flex-1 text-slate-500 hover:text-blue-400 transition-all"><span class="text-base opacity-70">💸</span><span class="text-[7px] font-bold mt-0.5 uppercase">Transaksi</span></a>
+            <a href="aset.html" class="flex flex-col items-center flex-1 text-blue-400"><span class="text-base">💎</span><span class="text-[7px] font-bold mt-0.5 uppercase">Aset</span></a>
+            <a href="history.html" class="flex flex-col items-center flex-1 text-slate-500 hover:text-blue-400 transition-all"><span class="text-base opacity-70">📜</span><span class="text-[7px] font-bold mt-0.5 uppercase">History</span></a>
+            <a href="ai.html" class="flex flex-col items-center flex-1 text-slate-500 hover:text-blue-400 transition-all"><span class="text-base opacity-70">🤖</span><span class="text-[7px] font-bold mt-0.5 uppercase">AI</span></a>
+            <button onclick="openLogoutModal()" class="flex flex-col items-center flex-1 text-red-900/70 hover:text-red-500 transition-all active:scale-90"><svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg><span class="text-[7px] font-bold uppercase">Keluar</span></button>
         </div>
     </nav>
 
+    <!-- LOGOUT MODAL -->
     <div id="logout-modal" class="fixed inset-0 bg-[#0d1117]/90 backdrop-blur-sm z-[99999] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-xs shadow-2xl transform scale-95 transition-transform duration-300" id="logout-modal-content">
             <div class="flex flex-col items-center text-center">
@@ -175,23 +118,13 @@
                 <p class="text-slate-400 text-[10px] font-medium mb-6 uppercase tracking-wider">Putuskan koneksi dari server?</p>
                 <div class="flex gap-3 w-full">
                     <button onclick="closeLogoutModal()" class="flex-1 py-3 rounded-xl border border-slate-700 text-slate-300 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all">Batal</button>
-                    <button onclick="executeRealLogout()" class="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-red-900/50 transition-all">Keluar</button>
+                    <button onclick="executeLogout()" class="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-red-900/50 transition-all">Keluar</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        function startClock() {
-            const display = document.getElementById('current-date-display');
-            setInterval(() => {
-                const now = new Date();
-                const options = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
-                const dateStr = now.toLocaleDateString('id-ID', options).toUpperCase();
-                const timeStr = now.toLocaleTimeString('en-GB', { hour12: false });
-                display.innerText = `${dateStr} // ${timeStr}`;
-            }, 1000);
-        }
 
         async function securityCheck() {
             try {
@@ -273,45 +206,27 @@
             } catch (err) { window.location.href = 'login.html'; }
         }
 
-        // LOGIKA MODAL LOGOUT
-        function openLogoutModal() {
+                function openLogoutModal() {
             const modal = document.getElementById('logout-modal');
             const content = document.getElementById('logout-modal-content');
             modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                content.classList.remove('scale-95');
-            }, 10);
+            setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10);
         }
-
         function closeLogoutModal() {
             const modal = document.getElementById('logout-modal');
             const content = document.getElementById('logout-modal-content');
-            modal.classList.add('opacity-0');
-            content.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
         }
-
-        async function executeRealLogout() {
-            try {
-                if (typeof window.logoutUser === 'function') {
-                    await window.logoutUser();
-                } else {
-                    await supabase.auth.signOut();
-                }
-                window.location.href = 'login.html';
-            } catch (error) {
-                console.error("Gagal keluar:", error);
-                alert("Terjadi kesalahan saat logout. Coba lagi.");
-            }
+        async function executeLogout() {
+            await window.logoutUser();
+            window.location.href = 'login.html';
         }
+        async function handleLogout() { openLogoutModal(); }
 
         window.onload = async () => {
             startClock();
-            await securityCheck();
-        }
+                await securityCheck()}
     </script>
 </body>
 </html>

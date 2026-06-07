@@ -80,7 +80,6 @@ window.calculateAssetSummary = (transactions) => {
                 
                 summary.totalInvest += amt; // Kunci mutlak modal tersimpan!
                 
-                // Jika ini adalah aset produktif (bukan dana darurat biasa), catat log unitnya ke memori brankas aset
                 if (isBeliAset && !catLower.includes('darurat')) {
                     const key = (tx.note || tx.keterangan || "ASET").toUpperCase().trim();
                     if (!summary.assetMap[key]) {
@@ -112,7 +111,6 @@ window.calculateAssetSummary = (transactions) => {
             const type = (tx.type || '').toLowerCase().trim();
             const unitQty = parseFloat(tx.unitCount) || 0;
             
-            // Skenario 1: Aksi Jual Aset Produktif (Vault Liquidation)
             if (type === 'investasi' && catLower.includes('jual')){
                 const key = (tx.note || tx.keterangan || "ASET").toUpperCase().trim();
                 
@@ -208,124 +206,80 @@ window.renderDashboardLogic = async () => {
             cfEl.className = `text-xl lg:text-2xl font-black italic ${data.monthlyCashflow >= 0 ? 'text-green-400' : 'text-red-400'}`;
         }
 
+
+
+//=========================================================================
+// AI COMMAND CONTROLLER
+// =========================================================================
+
+window.runAIAudit = async () => {
+const modal = document.getElementById('ai-modal');
+const content = document.getElementById('ai-content');
+const modalContent = document.getElementById('ai-modal-content');
+
+if (!modal || !content) return;
+
+// 1. Reset UI & Tampilkan Modal
+modal.classList.remove('hidden');
+content.innerHTML = `
+    <div class="flex flex-col items-center gap-4 py-10">
+        <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-[10px] font-black uppercase tracking-widest animate-pulse">Scanning Financial Frequency...</p>
+    </div>`;
+
+// Trigger animasi masuk
+setTimeout(() => {
+    modal.classList.remove('opacity-0');
+    if (modalContent) modalContent.classList.remove('scale-90');
+}, 10);
+
+try {
+    const transactions = await window.getTransactions();
+    const summary = window.calculateAssetSummary(transactions);
+
+    const { data, error } = await window._supabase.functions.invoke('analyze-finance', {
+        body: { stats: summary }
+    });
+
+    if (error) throw error;
+
+    content.innerHTML = `
+        <div class="space-y-6 animate-fade-in text-left">
+            <p class="text-blue-400 font-bold mb-4 tracking-widest">>>> DECRYPTED MESSAGE:</p>
+            <div class="text-sm leading-relaxed whitespace-pre-wrap">${data.analysis}</div>
+            <div class="mt-8 pt-6 border-t border-slate-800">
+                <p class="text-[9px] text-slate-500 uppercase tracking-widest leading-loose">
+                    "Amor Fati. Jangan biarkan angka mengendalikan jiwamu, biarkan jiwamu mengendalikan angka."
+                </p>
+            </div>
+        </div>`;
+} catch (err) {
+    content.innerHTML = `
+        <div class="text-red-400 text-center py-10">
+            <p class="font-black uppercase mb-2">Neural Link Interrupted</p>
+            <button onclick="runAIAudit()" class="mt-4 px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-500 rounded-lg text-[9px] font-bold uppercase">Retry</button>
+        </div>`;
+}
+
+
+};
+
+window.closeAIModal = () => {
+const modal = document.getElementById('ai-modal');
+const modalContent = document.getElementById('ai-modal-content');
+
+if (modal) modal.classList.add('opacity-0');
+if (modalContent) modalContent.classList.add('scale-90');
+
+setTimeout(() => {
+    if (modal) modal.classList.add('hidden');
+}, 300);
+
+
+};
+
                 // =========================================================================
         // COMMAND ANALYSIS ENGINE
-        // =========================================================================
-
-        //let systemStatus = "";
-        //let insights = [];
-
-        // SYSTEM MODE DETECTOR
-        //if (data.liquidCash < 0) {
-
-            //systemStatus = "🔴 SYSTEM STATUS : CASHFLOW PRESSURE";
-
-            //insights.push("Beban konsumsi mulai mendominasi arus kas utama.");
-            //insights.push("Liquid Cash berada di bawah batas ideal.");
-            //insights.push("Disarankan memperkuat cash reserve sebelum ekspansi aset baru.");
-
-        //} 
-        //else if (data.retentionRate >= 50 && data.assetBase > data.liquidCash) {
-
-            //systemStatus = "🟣 SYSTEM STATUS : AGGRESSIVE ACCUMULATION";
-
-            //insights.push("Sebagian besar income berhasil dikonversi menjadi Investment Base.");
-            //insights.push("Retention Rate berada di atas standar aman.");
-            //insights.push("Sistem mendeteksi pola akumulasi aset aktif.");
-
-        //} 
-        //else if (data.reservedFund > data.liquidCash) {
-
-            //systemStatus = "🟠 SYSTEM STATUS : DEFENSIVE MODE";
-
-            //insights.push("Dana darurat menjadi fondasi utama pertahanan finansial.");
-            //insights.push("Sistem mendeteksi pola finansial defensif dan stabil.");
-            //insights.push("Prioritaskan penguatan cash reserve sebelum ekspansi agresif.");
-
-        //} 
-        //else {
-
-            //systemStatus = "🟢 SYSTEM STATUS : CAPITAL STABLE";
-
-            //insights.push("Struktur finansial utama masih berada di zona aman.");
-            //insights.push("Asset accumulation berjalan lebih dominan dibanding konsumsi murni.");
-            //insights.push("Liquid Cash masih mampu menopang operasional utama.");
-        //}
-
-        // RENDER INSIGHT
-       //const insightEl = document.getElementById('all-time-insight');
-
-//if (insightEl) {
-
-    //insightEl.innerHTML = `
-    
-        //<div class="text-[11px] font-black tracking-[0.2em] text-white italic">
-            //${systemStatus}
-        //</div>
-
-        //<div class="space-y-3">
-
-            //${insights.map(item => `
-                //<div class="text-[11px] text-slate-400 font-semibold italic leading-relaxed">
-                    //• ${item}
-                //</div>
-            //`).join('')}
-
-        //</div>
-    //`;
-//}
-
- //const insightEl = document.getElementById('all-time-insight');
-//if (insightEl) {
-    //const totalOut = data.totalOutflow || 0;
-    //const totalIn = data.totalInflow || 0; // Inflow tetep eksis
-    
-    // Daftar kategori lu
-    ////const categories = ['Makan & Minum', 'Modal Trading (Deposit)', 'Rokok', 'Ortu', 'Lifestyle', 'Dana Darurat', 'Aset'];
-    
-    // Sortir berdasarkan nilai
-    //const sortedAlloc = categories
-        //.map(cat => [cat, data.allocations[cat] || 0])
-        //.sort((a, b) => b[1] - a[1]);
-
-    // Deteksi "Tersangka Utama"
-    //const konsumtifList = ['Makan & Minum', 'Rokok', 'Lifestyle' , 'Modal Trading (Deposit)'];
-    //const topCategory = sortedAlloc[0];
-    //const isRedAlert = konsumtifList.includes(topCategory[0]);
-
-    //insightEl.innerHTML = `
-        //<div class="p-4 border ${isRedAlert ? 'border-red-900 bg-red-950/20' : 'border-slate-700 bg-slate-900/30'} rounded-xl italic font-serif">
-            //<h4 class="text-[10px] font-black tracking-widest ${isRedAlert ? 'text-red-500' : 'text-emerald-500'} mb-2 uppercase text-center">>> Laporan Audit Alokasi</h4>
-            
-            //<div class="text-center mb-4 pb-3 border-b border-slate-700">
-                //<p class="text-[9px] text-slate-500 uppercase tracking-widest">Total Income Masuk</p>
-                //<p class="text-[16px] text-white font-black">${window.formatIDR(totalIn)}</p>
-            //</div>
-            
-            //<div class="space-y-2">
-                //${sortedAlloc.map(([name, val]) => {
-                    //const pct = totalOut > 0 ? ((val / totalOut) * 100).toFixed(0) : 0;
-                    //return `
-                        //<div class="flex justify-between items-center text-[11px]">
-                            //<span class="text-slate-400">• ${name}</span>
-                            //<div class="flex items-center gap-2">
-                                //<span class="text-slate-600 text-[9px]">${window.formatIDR(val)}</span>
-                                //<span class="text-white font-bold w-8 text-right">${pct}%</span>
-                            //</div>
-                        //</div>
-                    //`;
-                //}).join('')}
-            //</div>
-
-            //<div class="mt-4 pt-3 border-t border-slate-700 text-[10px] ${isRedAlert ? 'text-red-400' : 'text-emerald-400'} font-bold uppercase tracking-wider text-center">
-                //${isRedAlert 
-                    //? `Perhatian: Dominasi ${topCategory[0]} menekan efisiensi.` 
-                    //: `Sistem terkendali: ${topCategory[0]} memegang kendali utama.`}
-            //</div>
-        //</div>
-    //`;
-//}
-
 // ==============================
 // ALL TIME INSIGHT ENGINE
 // ==============================
@@ -647,7 +601,8 @@ if (tradingDeposit === 0 && tradingWD === 0) {
 
         </div>
 
-       <div class="bg-slate-800/40 p-6 rounded-[2rem] border border-slate-800 shadow-xl font-sans text-left mt-6"> <div class="flex justify-between items-center mb-6">
+        <div class="bg-slate-800/40 p-6 rounded-[2rem] border border-slate-800 shadow-xl font-sans text-left mt-6">
+    <div class="flex justify-between items-center mb-6">
         <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 italic">Trading Performance</h4>
         <div id="trading-status-badge">${tradingStatusHTML}</div>
     </div>
@@ -669,6 +624,7 @@ if (tradingDeposit === 0 && tradingWD === 0) {
         </p>
     </div>
 </div>
+
     `;
 }
 
@@ -730,26 +686,8 @@ if (tradingDeposit === 0 && tradingWD === 0) {
 
         //================
         // Render List Alokasi Strategis
-        //const list = document.getElementById('allocation-list');
-        //if (list) {
-            //list.innerHTML = '';
-            //const totalAlloc = Object.values(data.allocations).reduce((a, b) => a + b, 0);
-            //Object.entries(data.allocations).sort((a, b) => b[1] - a[1]).slice(0, 10).forEach(([name, val]) => {
-                //const pct = totalAlloc > 0 ? ((val / totalAlloc) * 100).toFixed(0) : 0;
-                //let barColor = 'bg-rose-600', textColor = 'text-rose-400';
-                //const nameLower = name.toLowerCase();
                 
-                //if (nameLower.includes('tua') || nameLower.includes('ortu')) { barColor = 'bg-blue-500'; textColor = 'text-blue-400'; }
-                //else if (nameLower.includes('beli') || nameLower.includes('aset') || nameLower.includes('investasi')) { barColor = 'bg-emerald-500'; textColor = 'text-emerald-400'; }
-                //else if (nameLower.includes('darurat')) { barColor = 'bg-orange-500'; textColor = 'text-orange-400'; }
 
-                //list.innerHTML += `
-                    //<div>
-                        //<div class="flex justify-between text-[9px] mb-2 uppercase font-black ${textColor} italic"><span>${name}</span><span>${pct}%</span></div>
-                        //<div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden shadow-inner">
-                            //<div class="${barColor} h-full transition-all duration-1000" style="width: ${pct}%"></div>
-                        //</div>
-                    //</div>`;
             //});
         //}
 
@@ -807,25 +745,93 @@ if (tradingDeposit === 0 && tradingWD === 0) {
                 return `${label} (${pct}%)`;
             });
 
+            const centerTextPlugin = {
+                id: 'centerText',
+                afterDraw(chart) {
+                    if (!chart.data.datasets[0]._meta) return;
+                    const { ctx, chartArea: { width, height, left, top } } = chart;
+                    ctx.save();
+                    const centerX = left + width / 2;
+                    const centerY = top + height / 2;
+                    ctx.fillStyle = '#94a3b8';
+                    ctx.font = 'bold 9px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.letterSpacing = '2px';
+                    ctx.fillText('INCOME', centerX, centerY - 8);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 11px sans-serif';
+                    ctx.fillText(window.formatIDR(data.totalInflow), centerX, centerY + 8);
+                    ctx.restore();
+                }
+            };
             window.myDashboardChart = new Chart(ctx, {
                 type: 'doughnut',
+                plugins: [centerTextPlugin],
                 data: {
                     labels: labelsWithPct.length ? labelsWithPct : ['Belum Ada Data'],
                     datasets: [{
                         data: Object.values(data.incomeSources).length ? Object.values(data.incomeSources) : [1],
-backgroundColor: labelsWithPct.length ? [
-   '#C2410C', // 1. Rust / Bara Api (Untuk Gaji)
-    '#0D9488', // 2. Deep Teal / Hijau Zamrud Kebiruan (Untuk WD Profit Trading)
-    '#CA8A04', // 3. Dark Gold / Kuning Emas Tua (Untuk Bonus)
-    '#6366F1'  // 4. Indigo / Ungu Misterius (Untuk Lain-lain / Rejeki Nomplok)
-] : ['#0f172a'], // Slate 900 (Warna kosong yang super gelap nyaris tembus pandang)
-borderWidth: 0,
-                        //data: Object.values(data.incomeSources).length ? Object.values(data.incomeSources) : [1],
-                        //backgroundColor: labelsWithPct.length ? ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'] : ['#1e293b'],
-                        //borderWidth: 0
+                        backgroundColor: labelsWithPct.length ? [
+                            '#C2410C',
+                            '#0D9488',
+                            '#CA8A04',
+                            '#6366F1'
+                        ] : ['#0f172a'],
+                        borderWidth: 0,
+                        hoverOffset: 8,
                     }]
                 },
-                options: { cutout: '75%', plugins: { legend: { position: 'bottom', labels: { color: '#64748b', font: { size: 10, weight: 'bold' }, padding: 20 } } } }
+                options: {
+                    cutout: '72%',
+                    animation: { animateRotate: true, animateScale: true, duration: 900, easing: 'easeInOutQuart' },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#64748b',
+                                font: { size: 10, weight: 'bold' },
+                                padding: 20,
+                                usePointStyle: true,
+                                boxWidth: 8,
+                                generateLabels: (chart) => {
+                                    const data = chart.data;
+                                    const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                    return data.labels.map((label, i) => {
+                                        const val = data.datasets[0].data[i];
+                                        const pct = total > 0 ? ((val / total) * 100).toFixed(0) : 0;
+                                        return {
+                                            text: `${label} ${pct}%`,
+                                            fillStyle: data.datasets[0].backgroundColor[i],
+                                            strokeStyle: 'transparent',
+                                            pointStyle: 'circle',
+                                            index: i
+                                        };
+                                    });
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    const val = ctx.raw;
+                                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                    const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                                    return [` ${window.formatIDR(val)}`, ` Porsi: ${pct}%`];
+                                }
+                            },
+                            backgroundColor: '#0f172a',
+                            borderColor: '#1e293b',
+                            borderWidth: 1,
+                            titleColor: '#94a3b8',
+                            bodyColor: '#ffffff',
+                            padding: 14,
+                            cornerRadius: 14,
+                            displayColors: true,
+                            boxWidth: 8,
+                            boxHeight: 8,
+                        }
+                    }
+                }
             });
         }
     } catch (err) { console.error("Error Dashboard Logic:", err); }
@@ -920,33 +926,8 @@ window.renderMonthlyLogic = async () => {
         if(document.getElementById('total-invest')) document.getElementById('total-invest').innerText = window.formatIDR(data.totalInvest);
         if(document.getElementById('total-cair-brankas')) document.getElementById('total-cair-brankas').innerText = window.formatIDR(data.totalCairBrankas); 
 
-        //const net = data.totalInflow - data.totalOutflow;
-        //const insightText = document.getElementById('insight-text');
-        //if (insightText) {
-            //if (data.totalInflow > 0 || data.totalOutflow > 0) {
-                //let kUtama = `Sisa saldo bersih kamu periode ini terhitung sebesar <b>${window.formatIDR(net)}</b>.`;
-                //let kAnalisis = "", kSaran = "";
 
-                //if (net >= 0) {
-                    //kAnalisis = ` 🔥 <b>Cashflow Positif.</b> Kamu berhasil mempertahankan <b>${data.retentionRate}%</b> dari total pemasukan bulan ini untuk dialokasikan ke tingkat keamanan finansial.`;
-                    //kSaran = parseFloat(data.retentionRate) >= 50 
-                        //? ` Sistem mendeteksi Retention Rate di atas standar premium (50%). Sisa dana ini sangat ideal jika langsung di-scale up ke instrumen investasi aktif atau mempertebal Dana Darurat kamu.`
-                        //: ` Struktur pengeluaran tergolong stabil, namun alokasi ke aset masih bisa ditingkatkan lagi di periode berikutnya. Batasi belanja impulsif harian/lifestyle.`;
-                //} else {
-                    //kAnalisis = ` ⚠️ <b>Cashflow Negatif Defisit.</b> Pengeluaran konsumsi kamu membengkak melampaui kapasitas pendapatan bulan ini.`;
-                    //kSaran = ` Tunda konsumsi tidak mendesak, utamakan pengisian tangki Liquid Cash dan potong pengeluaran lifestyle minimal 20% untuk memulihkan modal kamu.`;
-                //}
-                
-                //if (data.totalCairBrankas > 0) {
-                    //kSaran += `<br><br>🛡️ <b>Strategic Activation Notice:</b> Terdeteksi total pencairan cadangan sebesar <b>${window.formatIDR(data.totalCairBrankas)}</b> di bulan ini sebagai benteng pertahanan kas utama atau eksekusi ambil profit.`;
-                //}
-                
-                //insightText.innerHTML = `${kUtama}<br><br>${kAnalisis}<br><br>${kSaran}`;
-            //} else {
-                //insightText.innerText = "Tidak ada catatan log aktivitas keuangan terdeteksi pada periode bulan ini.";
-            //}
-        //}
-
+                    
         const net = data.totalInflow - data.totalOutflow;
 const insightText = document.getElementById('insight-text');
 
@@ -1045,8 +1026,6 @@ insightText.innerHTML = `
     </div>
 `;
 
-        //window.renderDoughnutChart('chartInflow', data.incomeSources, '#3b82f6', window.chartIn, (c) => window.chartIn = c);
-        //window.renderDoughnutChart('chartOutflow', data.allocations, '#ef4444', window.chartOut, (c) => window.chartOut = c);
         // ==========================================
      // ==========================================
         // 1. RENDER CHART INFLOW (GRADASI BIRU MONOKROM)
@@ -1059,16 +1038,14 @@ insightText.innerHTML = `
             const labelsIn = Object.keys(data.incomeSources);
             const valuesIn = Object.values(data.incomeSources);
             
-            // Palet gradasi biru (dari cerah ke gelap elegan)
             const bluePalette = [
-                '#3B82F6', // Blue 500 (Biru Terang)
+                '#60A5FA', // Blue 400 — paling terang
+                '#3B82F6', // Blue 500
                 '#2563EB', // Blue 600
                 '#1D4ED8', // Blue 700
                 '#1E40AF', // Blue 800
-                '#1E3A8A'  // Blue 900 (Biru Sangat Gelap)
             ];
 
-            // Bikin warnanya otomatis ngambil dari palet berurutan
             const inflowColors = labelsIn.map((label, index) => {
                 return bluePalette[index % bluePalette.length];
             });
@@ -1081,25 +1058,41 @@ insightText.innerHTML = `
                         data: valuesIn.length ? valuesIn : [1],
                         backgroundColor: labelsIn.length ? inflowColors : ['#0f172a'],
                         borderWidth: 0,
-                        hoverOffset: 4
+                        hoverOffset: 8
                     }]
                 },
                 options: { 
-                    cutout: '75%', 
-                    maintainAspectRatio: false, 
+                    cutout: '72%', 
+                    maintainAspectRatio: false,
+                    animation: { animateRotate: true, animateScale: true, duration: 800, easing: 'easeInOutQuart' },
                     plugins: { 
                         legend: { 
                             display: true, 
                             position: 'bottom',
-                            labels: { 
-                                color: '#94a3b8', 
-                                font: { size: 9, weight: 'normal' }, 
-                                padding: 10,
-                                usePointStyle: true, 
-                                boxWidth: 6,
-                                boxHeight: 6
-                            } 
-                        } 
+                            labels: {
+                                color: '#94a3b8', font: { size: 9, weight: 'bold' },
+                                padding: 12, usePointStyle: true, boxWidth: 6,
+                                generateLabels: (chart) => {
+                                    const d = chart.data;
+                                    const total = d.datasets[0].data.reduce((a,b) => a+b, 0);
+                                    return d.labels.map((lbl, i) => {
+                                        const pct = total > 0 ? ((d.datasets[0].data[i]/total)*100).toFixed(0) : 0;
+                                        return { text: `${lbl} ${pct}%`, fillStyle: d.datasets[0].backgroundColor[i], strokeStyle: 'transparent', pointStyle: 'circle', index: i };
+                                    });
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => {
+                                    const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+                                    const pct = total > 0 ? ((ctx.raw/total)*100).toFixed(1) : 0;
+                                    return [` ${window.formatIDR(ctx.raw)}`, ` Porsi: ${pct}%`];
+                                }
+                            },
+                            backgroundColor: '#0f172a', borderColor: '#1e293b', borderWidth: 1,
+                            titleColor: '#94a3b8', bodyColor: '#fff', padding: 12, cornerRadius: 12
+                        }
                     } 
                 }
             });
@@ -1116,12 +1109,12 @@ insightText.innerHTML = `
             const labelsOut = Object.keys(data.allocations);
             const valuesOut = Object.values(data.allocations);
             
-            // Siapkan palet warna merah (dari terang ke gelap) untuk konsumtif
             const redPalette = [
-                '#F43F5E', // Rose 500 (Merah Terang)
-                '#E11D48', // Rose 600 (Merah Standar)
-                '#BE123C', // Rose 700 (Merah Gelap)
-                '#9F1239'  // Rose 800 (Merah Sangat Gelap)
+                '#FB7185', // Rose 400 — paling terang
+                '#F43F5E', // Rose 500
+                '#E11D48', // Rose 600
+                '#BE123C', // Rose 700
+                '#9F1239', // Rose 800
             ];
             let redIndex = 0; // Penghitung urutan warna merah
 
@@ -1154,28 +1147,41 @@ insightText.innerHTML = `
                         data: valuesOut.length ? valuesOut : [1],
                         backgroundColor: labelsOut.length ? outflowColors : ['#0f172a'],
                         borderWidth: 0,
-                        hoverOffset: 4
+                        hoverOffset: 8
                     }]
                 },
                 options: { 
-                    cutout: '75%', 
-                    maintainAspectRatio: false, // Tambahin ini biar dia lebih fleksibel
+                    cutout: '72%', 
+                    maintainAspectRatio: false,
+                    animation: { animateRotate: true, animateScale: true, duration: 800, easing: 'easeInOutQuart' },
                     plugins: { 
                         legend: { 
                             display: true, 
                             position: 'bottom',
-                            labels: { 
-                                color: '#94a3b8', 
-                                font: { 
-                                    size: 9, // Font dikecilin dari 10 ke 9
-                                    weight: 'normal' // Dibuat normal aja biar ngga terlalu padat
-                                }, 
-                                padding: 10, // Jarak antar tulisan dirapatkan
-                                usePointStyle: true,
-                                boxWidth: 6, // Mengecilkan ukuran buletan warna
-                                boxHeight: 6
-                            } 
-                        } 
+                            labels: {
+                                color: '#94a3b8', font: { size: 9, weight: 'bold' },
+                                padding: 12, usePointStyle: true, boxWidth: 6,
+                                generateLabels: (chart) => {
+                                    const d = chart.data;
+                                    const total = d.datasets[0].data.reduce((a,b) => a+b, 0);
+                                    return d.labels.map((lbl, i) => {
+                                        const pct = total > 0 ? ((d.datasets[0].data[i]/total)*100).toFixed(0) : 0;
+                                        return { text: `${lbl} ${pct}%`, fillStyle: d.datasets[0].backgroundColor[i], strokeStyle: 'transparent', pointStyle: 'circle', index: i };
+                                    });
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => {
+                                    const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+                                    const pct = total > 0 ? ((ctx.raw/total)*100).toFixed(1) : 0;
+                                    return [` ${window.formatIDR(ctx.raw)}`, ` Porsi: ${pct}%`];
+                                }
+                            },
+                            backgroundColor: '#0f172a', borderColor: '#1e293b', borderWidth: 1,
+                            titleColor: '#94a3b8', bodyColor: '#fff', padding: 12, cornerRadius: 12
+                        }
                     } 
                 }
             });
@@ -1265,21 +1271,95 @@ window.renderYearlyLogic = async () => {
         if (chartEl) {
             const ctx = chartEl.getContext('2d');
             if (window.myYearlyChart) window.myYearlyChart.destroy();
+
+            // Hitung net cashflow per bulan untuk line chart overlay
+            const netData = inflowData.map((v, i) => v - outflowData[i]);
+
             window.myYearlyChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: monthNames,
                     datasets: [
-                        { label: 'Inflow', data: inflowData, backgroundColor: '#3b82f6', borderRadius: 8 },
-                        { label: 'Outflow', data: outflowData, backgroundColor: '#ef4444', borderRadius: 8 }
+                        {
+                            label: 'Inflow',
+                            data: inflowData,
+                            backgroundColor: 'rgba(59,130,246,0.80)',
+                            borderRadius: 10,
+                            borderSkipped: false,
+                            order: 2
+                        },
+                        {
+                            label: 'Outflow',
+                            data: outflowData,
+                            backgroundColor: 'rgba(239,68,68,0.70)',
+                            borderRadius: 10,
+                            borderSkipped: false,
+                            order: 3
+                        },
+                        {
+                            label: 'Net',
+                            data: netData,
+                            type: 'line',
+                            borderColor: '#10B981',
+                            backgroundColor: 'rgba(16,185,129,0.08)',
+                            borderWidth: 2,
+                            pointBackgroundColor: netData.map(v => v >= 0 ? '#10B981' : '#F43F5E'),
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            tension: 0.4,
+                            fill: false,
+                            order: 1
+                        }
                     ]
                 },
                 options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#64748b', font: { size: 10, weight: 'bold' } } } },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 900, easing: 'easeInOutQuart' },
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#64748b',
+                                font: { size: 10, weight: 'bold' },
+                                usePointStyle: true,
+                                boxWidth: 8,
+                                padding: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    const prefix = ctx.dataset.label === 'Net'
+                                        ? (ctx.raw >= 0 ? '📈 Net: +' : '📉 Net: ')
+                                        : ` ${ctx.dataset.label}: `;
+                                    return `${prefix}${window.formatIDR(Math.abs(ctx.raw))}`;
+                                }
+                            },
+                            backgroundColor: '#0f172a',
+                            borderColor: '#1e293b',
+                            borderWidth: 1,
+                            titleColor: '#94a3b8',
+                            bodyColor: '#ffffff',
+                            padding: 14,
+                            cornerRadius: 14
+                        }
+                    },
                     scales: {
-                        y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#64748b', font: { size: 9, weight: 'bold' } } },
-                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 9, weight: 'bold' } } }
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+                            ticks: {
+                                color: '#475569',
+                                font: { size: 9, weight: 'bold' },
+                                callback: v => v >= 1e6 ? 'Rp ' + (v/1e6).toFixed(0) + 'jt'
+                                              : v >= 1e3 ? 'Rp ' + (v/1e3).toFixed(0) + 'rb'
+                                              : v
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#475569', font: { size: 9, weight: 'bold' } }
+                        }
                     }
                 }
             });
@@ -1328,37 +1408,7 @@ window.renderAssetLogic = async () => {
 // RE-USABLE INTERACTION HELPERS
 // =========================================================================
 
-// Global Helper untuk Chart Donut Laporan Bulanan
-//window.renderDoughnutChart = (canvasId, dataMap, primaryColor, existingChart, saveInstanceCallback) => {
-    //const chartEl = document.getElementById(canvasId);
-    //if (!chartEl) return;
-    //const ctx = chartEl.getContext('2d');
-    //const labels = Object.keys(dataMap);
-    //const values = Object.values(dataMap);
-    
-    //if (existingChart) existingChart.destroy();
 
-    //const colors = primaryColor === '#3b82f6'
-        //? ['#3b82f6', '#60a5fa', '#2563eb', '#93c5fd'] 
-        //: ['#ef4444', '#f87171', '#dc2626', '#fca5a5', '#1e293b'];
-
-    //const newChart = new Chart(ctx, {
-        //type: 'doughnut',
-        //data: {
-            //labels: labels.length ? labels : ['Belum Ada Data'],
-            //datasets: [{
-                //data: values.length ? values : [1],
-                //backgroundColor: labels.length ? colors : ['#1e293b'],
-                //borderWidth: 0
-            //}]
-        //},
-        //options: {
-            //plugins: { legend: { position: 'bottom', labels: { color: '#64748b', font: { size: 9, weight: 'bold' } } } },
-            //cutout: '75%', responsive: true, maintainAspectRatio: false
-        //}
-    //});
-    //saveInstanceCallback(newChart);
-//};
 
 // Global Moving Window Dropdown Generator (Anti-Stuck)
 window.generateYearOptions = (selectedYear) => {
